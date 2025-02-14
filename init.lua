@@ -51,6 +51,9 @@ require("lazy").setup {
         cmd = {
             "CopilotChatPromptList",
         }
+    },
+    {
+      'mechatroner/rainbow_csv'
     }
 }
 
