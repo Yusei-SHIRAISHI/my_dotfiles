@@ -16,7 +16,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-chat_prefix = '<S-c>'
 tab_prefix = '<S-t>'
 
 require("lazy").setup {
@@ -55,8 +54,9 @@ require("lazy").setup {
     branch = "main",
     dependencies = {
       { "github/copilot.vim" },
-      { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
+      { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log wrapper
     },
+<<<<<<< HEAD
     {'tpope/vim-fugitive'},
     {'tpope/vim-surround'},
     { 'nvim-lualine/lualine.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' } },
@@ -73,9 +73,11 @@ require("lazy").setup {
             { "github/copilot.vim" },
             { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
         },
+        file_types = { "markdown", "copilot-chat" },
         cmd = {
-            "CopilotChatPromptList",
-        }
+          "CopilotChatPromptList",
+        },
+      },
     },
     {
       'mechatroner/rainbow_csv'
@@ -87,96 +89,57 @@ require('lualine').setup {
   options = { theme = 'jellybeans' }
 }
 
-local select = require('CopilotChat.select')
-local commit_prompt = [[
-    コミットメッセージを次の規約に従って記述してください。
-    規約：
-        - タイトルは最大50文字で、メッセージは72文字で折り返す。メッセージ全体をgitcommit言語でコードブロックにラップする。
-        - 日本語で記述を行う
-        - フォーマットは次の通りです。
-        - 日本語で記載してください
-            ```gitcommit
-            [#{コミットタイプ}]: 変更内容の要約
-
-            変更内容の詳細
-
-            メッセージ
-            ```
-
-            - コミットタイプは次のいずれかです。
-                - build: ビルド関連の変更
-                - fix: バグ修正
-                - feat: 新機能の追加、修正
-                - docs: ドキュメントのみの変更
-                - style: コードの意味に影響を与えない変更（空白、フォーマット、セミコロンの欠落など）
-                - refactor: 既存のコードのリファクタリング
-                - perf: パフォーマンスを向上させるコードの変更
-                - test: テストの追加、変更、削除
-                - ci: CI/CDの設定変更
-                - chore: 雑用（ライブラリのアップデートなど）
-            - 複数のコミットタイプを含める場合は','で区切ってください。
-]]
-
 vim.opt.runtimepath:append('~/.config/nvim/prompts')
 require("CopilotChat").setup {
+  highlight_headers = false,
+  separator = '---',
+  error_header = '> [!ERROR] Error',
+
+  auto_insert_mode = false,
+  chat_autocomplete = false,
+
   window = {
-    layout = 'float', -- 'vertical', 'horizontal', 'float', 'replace'
-    width = 0.7, -- fractional width of parent, or absolute width in columns when > 1
-    height = 0.7, -- fractional height of parent, or absolute height in rows when > 1
-    -- Options below only apply to floating windows
-    relative = 'editor', -- 'editor', 'win', 'cursor', 'mouse'
-    border = 'single', -- 'none', single', 'double', 'rounded', 'solid', 'shadow'
-    row = nil, -- row position of the window, default is centered
-    col = nil, -- column position of the window, default is centered
-    title = 'Copilot Chat', -- title of chat window
-    footer = nil, -- footer of chat window
-    zindex = 1, -- determines if window is on top or below other floating windows
+    layout = 'vertical',
+    width = 0.4,
   },
-  system_prompt = require('prompts.system_prompt'),
+
   prompts = {
     Comment = {
-      prompt = '/COPILOT_EXPLAIN 選択したコードの説明をコメントとして書いてください。',
+      prompt = require('prompts.comment_prompt'),
     },
     Explain = {
-      prompt = '/COPILOT_EXPLAIN 選択したのコードの説明をしてください。',
+      prompt = require('prompts.explain_prompt'),
     },
     Review = {
-      prompt = '/COPILOT_REVIEW 選択したコードのレビューをしてください。',
-      selection = function(source)
-        return select.visual(source) or select.buffer(source)
-      end,
+      prompt = require('prompts.review_prompt'),
     },
     ReviewStaged = {
-      prompt = '/COPILOT_REVIEW コードレビューをしてください。',
-      selection = function(source)
-        return select.gitdiff(source, true)
-      end,
+      prompt = require('prompts.review_staged_prompt'),
     },
     Tests = {
-      prompt = '/COPILOT_TESTS カーソル上のコードの詳細な単体テスト関数を書いてください。',
+      prompt = require('prompts.tests_prompt'),
     },
     Fix = {
-      prompt = '/COPILOT_FIX このコードには問題があります。バグを修正したコードに書き換えてください。',
+      prompt = require('prompts.fix_prompt'),
     },
     Optimize = {
-      prompt = '/COPILOT_REFACTOR 選択したコードを最適化し、パフォーマンスと可読性を向上させてください。',
+      prompt = require('prompts.optimize_prompt'),
     },
     Docs = {
-      prompt = '/COPILOT_REFACTOR 選択したコードのドキュメントを書いてください。ドキュメントをコメントとして追加した元のコードを含むコードブロックで回答してください。使用するプログラミング言語に最も適したドキュメントスタイルを使用してください（例：JavaScriptのJSDoc、Pythonのdocstringsなど）',
+      prompt = require('prompts.docs_prompt'),
     },
     DocsJa = {
-      prompt = '/COPILOT_REFACTOR 選択したコードのドキュメントを日本語で書いてください。ドキュメントをコメントとして追加した元のコードを含むコードブロックで回答してください。使用するプログラミング言語に最も適したドキュメントスタイルを使用してください（例：JavaScriptのJSDoc、Pythonのdocstringsなど）',
-    },
-    FixDiagnostic = {
-      prompt = 'ファイル内の次のような診断上の問題を解決してください：',
-      selection = select.diagnostics,
+      prompt = require('prompts.docs_ja_prompt'),
     },
     Commit = {
-      prompt = commit_prompt,
-      selection = function(source)
-        return select.gitdiff(source, true)
-      end,
+      prompt = require('prompts.commit_prompt'),
     },
+  },
+
+  mappings = {
+    complete = {
+      insert = '<C-x><C-n>',
+    }
   }
 }
 
@@ -221,6 +184,8 @@ keymap.set({ 'n', 'i' }, '<C-x><C-f>',
   function() require("fzf-lua").complete_path() end,
   { silent = true, desc = "Fuzzy complete path" }
 )
+
+-- insert file path use fuzzy find
 keymap.set({ 'n', 'i' }, '<C-x><C-i>',
   function()
     require("fzf-lua").fzf_exec("rg --files",
@@ -274,6 +239,7 @@ set.clipboard   = { 'unnamedplus', 'unnamed' }
 set.ruler       = true
 set.pumheight   = 10
 set.infercase   = true
+set.splitright  = true
 
 vim.cmd [[colorscheme jellybeans]]
 vim.cmd [[highlight NormalFloat guibg=#151515]]
