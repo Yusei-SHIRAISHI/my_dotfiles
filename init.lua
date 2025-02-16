@@ -54,35 +54,16 @@ require("lazy").setup {
     branch = "main",
     dependencies = {
       { "github/copilot.vim" },
-      { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log wrapper
+      { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
     },
-<<<<<<< HEAD
-    {'tpope/vim-fugitive'},
-    {'tpope/vim-surround'},
-    { 'nvim-lualine/lualine.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' } },
-    {'prabirshrestha/vim-lsp'},
-    {'mattn/vim-lsp-settings'},
-    {'prabirshrestha/asyncomplete.vim'},
-    {'prabirshrestha/asyncomplete-lsp.vim'},
-    {'mattn/vim-lsp-icons'},
-    {'hrsh7th/vim-vsnip'},
-    {
-        'CopilotC-Nvim/CopilotChat.nvim',
-        branch = "main",
-        dependencies = {
-            { "github/copilot.vim" },
-            { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
-        },
-        file_types = { "markdown", "copilot-chat" },
-        cmd = {
-          "CopilotChatPromptList",
-        },
-      },
+    file_types = { "markdown", "copilot-chat" },
+    cmd = {
+      "CopilotChatPromptList",
     },
-    {
-      'mechatroner/rainbow_csv'
-    }
-  }
+  },
+  {
+    'mechatroner/rainbow_csv'
+  },
 }
 
 require('lualine').setup {
