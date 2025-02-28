@@ -57,9 +57,6 @@ require("lazy").setup {
       { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
     },
     file_types = { "markdown", "copilot-chat" },
-    cmd = {
-      "CopilotChatPromptList",
-    },
   },
   {
     'mechatroner/rainbow_csv'
@@ -70,6 +67,7 @@ require('lualine').setup {
   options = { theme = 'jellybeans' }
 }
 
+require('fzf-lua').register_ui_select()
 vim.opt.runtimepath:append('~/.config/nvim/prompts')
 require("CopilotChat").setup {
   highlight_headers = false,
@@ -161,11 +159,6 @@ keymap.set('i', '<C-w>', '<Plug>(copilot-accept-word)')
 keymap.set('i', '<C-l>', '<Plug>(copilot-accept-line)')
 keymap.set('i', '<C-r>', '<Plug>(copilot-dismiss)')
 keymap.set('i', '<C-r><C-r>', '<Plug>(copilot-suggest)')
-keymap.set({ 'n', 'i' }, '<C-x><C-f>',
-  function() require("fzf-lua").complete_path() end,
-  { silent = true, desc = "Fuzzy complete path" }
-)
-
 -- insert file path use fuzzy find
 keymap.set({ 'n', 'i' }, '<C-x><C-i>',
   function()
@@ -358,13 +351,12 @@ vim.api.nvim_create_user_command('PascalCase', function()
   convert_selection_to_case(to_pascal_case)
 end, { range = true })
 
-local function copilot_chat_prompt_list()
-  local actions = require("CopilotChat.actions")
-  require("CopilotChat.integrations.fzflua").pick(actions.prompt_actions())
-end
+vim.api.nvim_create_user_command('B', function()
+  require('fzf-lua').buffers()
+end, {})
 
-vim.api.nvim_create_user_command('CopilotChatPromptList', function()
-  copilot_chat_prompt_list()
+vim.api.nvim_create_user_command('F', function()
+  require('fzf-lua').files()
 end, {})
 
 -- WSL clipboard
