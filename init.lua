@@ -59,7 +59,8 @@ require("lazy").setup {
     file_types = { "markdown", "copilot-chat" },
   },
   {
-    'mechatroner/rainbow_csv'
+    'mechatroner/rainbow_csv',
+    ft = { 'csv' },
   },
 }
 
