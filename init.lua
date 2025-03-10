@@ -16,7 +16,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-tab_prefix = '<S-t>'
+local tab_prefix = '<S-t>'
 
 require("lazy").setup {
   { 'preservim/nerdtree' },
@@ -191,7 +191,7 @@ set.showmode    = true
 set.number      = true
 set.cursorline  = true
 set.undofile    = true
-set.helplang    = "ja", "en"
+set.helplang    = { "ja", "en" }
 set.showmatch   = true
 set.mouse       = ""
 set.showtabline = 2
