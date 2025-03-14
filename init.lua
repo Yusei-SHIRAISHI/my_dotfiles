@@ -68,6 +68,13 @@ require('lualine').setup {
   options = { theme = 'jellybeans' }
 }
 
+local prompt_base = [[
+
+ユーザーは日本人です。コメントや解説は日本語で行ってください。
+ただし、コードブロックのヘッダは日本語である必要はありません。指定のフォーマットに従ってください。
+
+]]
+
 require('fzf-lua').register_ui_select()
 vim.opt.runtimepath:append('~/.config/nvim/prompts')
 require("CopilotChat").setup {
@@ -85,34 +92,34 @@ require("CopilotChat").setup {
 
   prompts = {
     Comment = {
-      prompt = require('prompts.comment_prompt'),
+      prompt = prompt_base .. require('prompts.comment_prompt'),
     },
     Explain = {
-      prompt = require('prompts.explain_prompt'),
+      prompt = prompt_base .. require('prompts.explain_prompt'),
     },
     Review = {
-      prompt = require('prompts.review_prompt'),
+      prompt = prompt_base .. require('prompts.review_prompt'),
     },
     ReviewStaged = {
-      prompt = require('prompts.review_staged_prompt'),
+      prompt = prompt_base .. require('prompts.review_staged_prompt'),
     },
     Tests = {
-      prompt = require('prompts.tests_prompt'),
+      prompt = prompt_base .. require('prompts.tests_prompt'),
     },
     Fix = {
-      prompt = require('prompts.fix_prompt'),
+      prompt = prompt_base .. require('prompts.fix_prompt'),
     },
     Optimize = {
-      prompt = require('prompts.optimize_prompt'),
+      prompt = prompt_base .. require('prompts.optimize_prompt'),
     },
     Docs = {
-      prompt = require('prompts.docs_prompt'),
+      prompt = prompt_base .. require('prompts.docs_prompt'),
     },
     DocsJa = {
-      prompt = require('prompts.docs_ja_prompt'),
+      prompt = prompt_base .. require('prompts.docs_ja_prompt'),
     },
     Commit = {
-      prompt = require('prompts.commit_prompt'),
+      prompt = prompt_base .. require('prompts.commit_prompt'),
     },
   },
 
