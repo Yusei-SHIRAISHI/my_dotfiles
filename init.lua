@@ -68,12 +68,12 @@ require('lualine').setup {
   options = { theme = 'jellybeans' }
 }
 
-local prompt_base = [[
-
+local extention_prompt = [[
 ユーザーは日本人です。コメントや解説は日本語で行ってください。
 ただし、コードブロックのヘッダは日本語である必要はありません。指定のフォーマットに従ってください。
-
 ]]
+
+local default_prompts = require("CopilotChat.config.prompts")
 
 require('fzf-lua').register_ui_select()
 vim.opt.runtimepath:append('~/.config/nvim/prompts')
@@ -91,35 +91,47 @@ require("CopilotChat").setup {
   },
 
   prompts = {
+    COPILOT_BASE = {
+      system_prompt = extention_prompt .. default_prompts["COPILOT_BASE"].system_prompt,
+    },
+    COPILOT_INSTRUCTIONS = {
+      system_prompt = extention_prompt .. default_prompts["COPILOT_INSTRUCTIONS"].system_prompt,
+    },
+    COPILOT_EXPLAIN = {
+      system_prompt = extention_prompt .. default_prompts["COPILOT_EXPLAIN"].system_prompt,
+    },
+    COPILOT_REVIEW = {
+      system_prompt = extention_prompt .. default_prompts["COPILOT_REVIEW"].system_prompt,
+    },
     Comment = {
-      prompt = prompt_base .. require('prompts.comment_prompt'),
+      prompt = require('prompts.comment_prompt'),
     },
     Explain = {
-      prompt = prompt_base .. require('prompts.explain_prompt'),
+      prompt = require('prompts.explain_prompt'),
     },
     Review = {
-      prompt = prompt_base .. require('prompts.review_prompt'),
+      prompt = require('prompts.review_prompt'),
     },
     ReviewStaged = {
-      prompt = prompt_base .. require('prompts.review_staged_prompt'),
+      prompt = require('prompts.review_staged_prompt'),
     },
     Tests = {
-      prompt = prompt_base .. require('prompts.tests_prompt'),
+      prompt = require('prompts.tests_prompt'),
     },
     Fix = {
-      prompt = prompt_base .. require('prompts.fix_prompt'),
+      prompt = require('prompts.fix_prompt'),
     },
     Optimize = {
-      prompt = prompt_base .. require('prompts.optimize_prompt'),
+      prompt = require('prompts.optimize_prompt'),
     },
     Docs = {
-      prompt = prompt_base .. require('prompts.docs_prompt'),
+      prompt = require('prompts.docs_prompt'),
     },
     DocsJa = {
-      prompt = prompt_base .. require('prompts.docs_ja_prompt'),
+      prompt = require('prompts.docs_ja_prompt'),
     },
     Commit = {
-      prompt = prompt_base .. require('prompts.commit_prompt'),
+      prompt = require('prompts.commit_prompt'),
     },
   },
 
