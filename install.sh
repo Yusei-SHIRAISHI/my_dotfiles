@@ -19,7 +19,11 @@ makeLinksToHomeDir(){
 }
 
 installList=('.bashrc' '.vimrc' '.tmux.conf' '.zshrc' '.gitconfig')
-
 makeLinksToHomeDir ${installList[@]}
+
+[ -d `${HOME}/.config/nvim/lua` ] || mkdir -p `${HOME}/.config/nvim/lua`;
+
+ln -sfn ${currentDir}/init.lua $HOME/.config/nvim/init.lua
+ln -sfn ${currentDir}/prompts $HOME/.config/nvim/lua/prompts
 
 exit 0;
