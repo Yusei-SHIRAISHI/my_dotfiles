@@ -152,11 +152,6 @@ require("lazy").setup {
                 avante = {
                     
                 },
-                codecompanion = {
-                    show_result_in_chat = true,  -- Show tool results in chat
-                    make_vars = true,            -- Create chat variables from resources
-                    make_slash_commands = true, -- make /slash_commands from MCP server prompts
-                },
             },
             
             -- UI configuration
