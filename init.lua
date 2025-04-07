@@ -301,8 +301,13 @@ require("avante").setup({
     -- system_prompt as function ensures LLM always has latest MCP server state
     -- This is evaluated for every message, even in existing chats
     system_prompt = function()
-        local hub = require("mcphub").get_hub_instance()
-        return hub:get_active_servers_prompt()
+      local success, hub = pcall(require("mcphub").get_hub_instance)
+      if success and hub then
+          return hub:get_active_servers_prompt()
+      else
+          vim.notify("Failed to get hub instance", vim.log.levels.ERROR)
+          return ""
+      end
     end,
     -- Using function prevents requiring mcphub before it's loaded
     custom_tools = function()
@@ -333,12 +338,6 @@ require("copilot").setup({
     ["*"] = true
   }
 })
-
-local extention_prompt = [[
-ユーザーは日本人です。コメントや解説は日本語で行ってください。
-ただし、コードブロックのヘッダは日本語である必要はありません。指定のフォーマットに従ってください。
-]]
-
 
 require('fzf-lua').register_ui_select()
 
