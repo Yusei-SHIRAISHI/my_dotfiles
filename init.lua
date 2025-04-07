@@ -19,7 +19,119 @@ vim.opt.rtp:prepend(lazypath)
 local tab_prefix = '<S-t>'
 
 require("lazy").setup {
-  { 'preservim/nerdtree' },
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v2.x",
+    requires = { 
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+    },
+    config = function()
+      require('neo-tree').setup({
+        close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
+        popup_border_style = "rounded",
+        enable_git_status = true,
+        enable_diagnostics = true,
+        default_component_configs = {
+          indent = {
+            padding = 0,
+            with_markers = true,
+            indent_marker = "│",
+            last_indent_marker = "└",
+            highlight = "NeoTreeIndentMarker",
+          },
+          icon = {
+            folder_closed = "",
+            folder_open = "",
+            folder_empty = "ﰊ",
+          },
+          modified = {
+            symbol = "[+]",
+            highlight = "NeoTreeModified",
+          },
+          name = {
+            trailing_slash = false,
+            use_git_status_colors = true,
+          },
+        },
+        window = {
+          position = "left",
+          width = 40,
+          mappings = {
+            ["<space>"] = "toggle_node",
+            ["<2-LeftMouse>"] = "open",
+            ["<cr>"] = "open",
+            ["S"] = "open_split",
+            ["s"] = "open_vsplit",
+            ["C"] = "close_node",
+            ["R"] = "refresh",
+            ["a"] = "add",
+            ["d"] = "delete",
+            ["r"] = "rename",
+            ["c"] = "copy_to_clipboard",
+            ["x"] = "cut_to_clipboard",
+            ["p"] = "paste_from_clipboard",
+            ["q"] = "close_window",
+          },
+        },
+        filesystem = {
+          commands = {
+            avante_add_files = function(state)
+              local node = state.tree:get_node()
+              local filepath = node:get_id()
+              local relative_path = require('avante.utils').relative_path(filepath)
+
+              local sidebar = require('avante').get()
+
+              local open = sidebar:is_open()
+              -- ensure avante sidebar is open
+              if not open then
+                require('avante.api').ask()
+                sidebar = require('avante').get()
+              end
+
+              sidebar.file_selector:add_selected_file(relative_path)
+
+              -- remove neo tree buffer
+              if not open then
+                sidebar.file_selector:remove_selected_file('neo-tree filesystem [1]')
+              end
+            end,
+          },
+          window = {
+            mappings = {
+              ['oa'] = 'avante_add_files',
+            },
+          },
+          filtered_items = {
+            visible = false,
+            hide_dotfiles = true,
+            hide_gitignored = true,
+            hide_by_name = {
+              ".DS_Store",
+              "thumbs.db",
+            },
+            never_show = {
+              ".DS_Store",
+              "thumbs.db",
+            },
+          },
+          follow_current_file = true,
+          hijack_netrw_behavior = "open_default",
+          use_libuv_file_watcher = true,
+        },
+        buffers = {
+          follow_current_file = true,
+        },
+        git_status = {
+          window = {
+            position = "float",
+          },
+        },
+      })
+    end
+  },
   { 'vim-jp/vimdoc-ja' },
   { 'nanotech/jellybeans.vim' },
   { 'cohama/lexima.vim' },
@@ -50,13 +162,82 @@ require("lazy").setup {
     end,
   },
   {
-    'CopilotC-Nvim/CopilotChat.nvim',
-    branch = "main",
-    dependencies = {
-      { "github/copilot.vim" },
-      { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
+    "yetone/avante.nvim",
+    enabled = true,
+    event = "VeryLazy",
+    version = false, -- Never set this value to "*"! Never!
+    opts = {
+      provider = "copilot",
+      auto_suggestions_provider = "copilot",
+      behaviour = {
+        auto_suggestions = true,
+        auto_set_highlight_group = true,
+        auto_set_keymaps = true,
+        auto_apply_diff_after_generation = true,
+        support_paste_from_clipboard = true,
+      },
+      windows = {
+        position = "right",
+        width = 30,
+        sidebar_header = {
+          align = "center",
+          rounded = false,
+        },
+        ask = {
+          floating = true,
+          start_insert = true,
+          border = "rounded"
+        }
+      },
+      copilot = {
+        endpoint = "https://api.githubcopilot.com",
+        model = "gpt-4o-2024-08-06",
+        proxy = nil, -- [protocol://]host[:port] Use this proxy
+        allow_insecure = false, -- Allow insecure server connections
+        timeout = 30000, -- Timeout in milliseconds
+        temperature = 0,
+        max_tokens = 20480,
+      },
     },
-    file_types = { "markdown", "copilot-chat" },
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    build = "make",
+    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      --- The below dependencies are optional,
+      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+      "ibhagwan/fzf-lua", -- for file_selector provider fzf
+      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+      "zbirenbaum/copilot.lua", -- for providers='copilot'
+      {
+        -- support for image pasting
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            use_absolute_path = true,
+          },
+        },
+      },
+      {
+        -- Make sure to set this up properly if you have lazy=true
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
+      },
+    },
   },
   {
     'mechatroner/rainbow_csv',
@@ -68,81 +249,34 @@ require('lualine').setup {
   options = { theme = 'jellybeans' }
 }
 
+require("copilot").setup({
+  suggestion = {
+    enabled = true,
+    auto_trigger = true,
+    keymap = {
+      accept = "<Tab>",
+      accept_word = "<C-w>",
+      accept_line = "<C-l>",
+      next = "<C-j>",
+      prev = "<C-k>",
+      toggle_auto_trigger = "<C-r>"
+    },
+  },
+  filetypes = {
+    ["*"] = true
+  }
+})
+
 local extention_prompt = [[
 ユーザーは日本人です。コメントや解説は日本語で行ってください。
 ただし、コードブロックのヘッダは日本語である必要はありません。指定のフォーマットに従ってください。
 ]]
 
-local default_prompts = require("CopilotChat.config.prompts")
 
 require('fzf-lua').register_ui_select()
-vim.opt.runtimepath:append('~/.config/nvim/prompts')
-require("CopilotChat").setup {
-  highlight_headers = false,
-  separator = '---',
-  error_header = '> [!ERROR] Error',
-
-  auto_insert_mode = false,
-  chat_autocomplete = false,
-
-  window = {
-    layout = 'vertical',
-    width = 0.4,
-  },
-
-  prompts = {
-    COPILOT_BASE = {
-      system_prompt = extention_prompt .. default_prompts["COPILOT_BASE"].system_prompt,
-    },
-    COPILOT_INSTRUCTIONS = {
-      system_prompt = extention_prompt .. default_prompts["COPILOT_INSTRUCTIONS"].system_prompt,
-    },
-    COPILOT_EXPLAIN = {
-      system_prompt = extention_prompt .. default_prompts["COPILOT_EXPLAIN"].system_prompt,
-    },
-    COPILOT_REVIEW = {
-      system_prompt = extention_prompt .. default_prompts["COPILOT_REVIEW"].system_prompt,
-    },
-    Comment = {
-      prompt = require('prompts.comment_prompt'),
-    },
-    Explain = {
-      prompt = require('prompts.explain_prompt'),
-    },
-    Review = {
-      prompt = require('prompts.review_prompt'),
-    },
-    ReviewStaged = {
-      prompt = require('prompts.review_staged_prompt'),
-    },
-    Tests = {
-      prompt = require('prompts.tests_prompt'),
-    },
-    Fix = {
-      prompt = require('prompts.fix_prompt'),
-    },
-    Optimize = {
-      prompt = require('prompts.optimize_prompt'),
-    },
-    Docs = {
-      prompt = require('prompts.docs_prompt'),
-    },
-    DocsJa = {
-      prompt = require('prompts.docs_ja_prompt'),
-    },
-    Commit = {
-      prompt = require('prompts.commit_prompt'),
-    },
-  },
-
-  mappings = {
-    complete = {
-      insert = '<C-x><C-n>',
-    }
-  }
-}
 
 --keybinds
+vim.g.mapleader = ' '
 --normal
 keymap.set('n', 'j', 'gj')
 keymap.set('n', 'k', 'gk')
@@ -150,8 +284,8 @@ keymap.set('n', 'gj', 'j')
 keymap.set('n', 'gk', 'k')
 keymap.set('n', '<C-j>', '<C-e>')
 keymap.set('n', '<C-k>', '<C-y>')
-keymap.set('n', '<C-n>', '<cmd>NERDTreeToggle<CR>')
-keymap.set('n', '<C-p>', '<cmd>CopilotChatToggle<CR>')
+keymap.set('n', '<C-n>', '<cmd>Neotree toggle<CR>')
+keymap.set('n', '<C-p>', '<cmd>AvanteToggle<CR>')
 keymap.set('n', '\\', '<cmd>FzfLua commands<CR>')
 keymap.set('n', '<ESC><ESC>', '<cmd>nohlsearch<CR>')
 keymap.set('n', '<Up>', '<cmd>bnext<CR>')
@@ -173,12 +307,6 @@ keymap.set('n', tab_prefix .. 'S-h', '<cmd>-tabmove<CR>')
 --insert
 keymap.set('i', '<C-b>', '<Left>')
 keymap.set('i', '<C-f>', '<Right>')
-keymap.set('i', '<C-j>', '<Plug>(copilot-next)')
-keymap.set('i', '<C-k>', '<Plug>(copilot-previous)')
-keymap.set('i', '<C-w>', '<Plug>(copilot-accept-word)')
-keymap.set('i', '<C-l>', '<Plug>(copilot-accept-line)')
-keymap.set('i', '<C-r>', '<Plug>(copilot-dismiss)')
-keymap.set('i', '<C-r><C-r>', '<Plug>(copilot-suggest)')
 -- insert file path use fuzzy find
 keymap.set({ 'n', 'i' }, '<C-x><C-i>',
   function()
