@@ -75,6 +75,23 @@ require("lazy").setup {
             ["q"] = "close_window",
           },
         },
+        -- system_prompt as function ensures LLM always has latest MCP server state
+        -- This is evaluated for every message, even in existing chats
+        system_prompt = function()
+          local success, hub = pcall(require("mcphub").get_hub_instance)
+          if success and hub then
+              return hub:get_active_servers_prompt()
+          else
+              vim.notify("Failed to get hub instance", vim.log.levels.ERROR)
+              return ""
+          end
+        end,
+        -- Using function prevents requiring mcphub before it's loaded
+        custom_tools = function()
+            return {
+                require("mcphub.extensions.avante").mcp_tool(),
+            }
+        end,
         filesystem = {
           commands = {
             avante_add_files = function(state)
@@ -246,6 +263,9 @@ require("lazy").setup {
         max_tokens = 20480,
       },
     },
+    file_selectors = {
+      provider = "fzf",
+    },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
     -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
@@ -293,23 +313,6 @@ require("lazy").setup {
 }
 
 require("avante").setup({
-    -- system_prompt as function ensures LLM always has latest MCP server state
-    -- This is evaluated for every message, even in existing chats
-    system_prompt = function()
-      local success, hub = pcall(require("mcphub").get_hub_instance)
-      if success and hub then
-          return hub:get_active_servers_prompt()
-      else
-          vim.notify("Failed to get hub instance", vim.log.levels.ERROR)
-          return ""
-      end
-    end,
-    -- Using function prevents requiring mcphub before it's loaded
-    custom_tools = function()
-        return {
-            require("mcphub.extensions.avante").mcp_tool(),
-        }
-    end,
 })
 
 require('lualine').setup {
