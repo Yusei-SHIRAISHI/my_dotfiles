@@ -249,7 +249,7 @@ require("lazy").setup {
         },
         ask = {
           floating = true,
-          start_insert = true,
+          start_insert = false,
           border = "rounded"
         }
       },
@@ -265,6 +265,10 @@ require("lazy").setup {
     },
     file_selectors = {
       provider = "fzf",
+    },
+    web_search_engine = {
+      provider = "tavily",
+      proxy = nil,
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
@@ -311,9 +315,6 @@ require("lazy").setup {
     ft = { 'csv' },
   },
 }
-
-require("avante").setup({
-})
 
 require('lualine').setup {
   options = { theme = 'jellybeans' }
