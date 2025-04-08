@@ -21,7 +21,7 @@ local tab_prefix = '<S-t>'
 require("lazy").setup {
   {
     "nvim-neo-tree/neo-tree.nvim",
-    branch = "v2.x",
+    branch = "v3.x",
     requires = { 
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
@@ -212,10 +212,7 @@ require("lazy").setup {
   { 'nvim-lualine/lualine.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' } },
   { 'prabirshrestha/vim-lsp' },
   { 'mattn/vim-lsp-settings' },
-  { 'prabirshrestha/asyncomplete.vim' },
-  { 'prabirshrestha/asyncomplete-lsp.vim' },
   { 'mattn/vim-lsp-icons' },
-  { 'hrsh7th/vim-vsnip' },
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
