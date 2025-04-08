@@ -81,3 +81,5 @@ if [ -f /usr/local/bin/tmux ]; then
     alias tls="tmux ls";
 fi
 
+
+. "$HOME/.local/bin/env"

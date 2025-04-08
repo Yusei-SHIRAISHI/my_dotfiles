@@ -29,3 +29,5 @@ fi
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
+. "$HOME/.local/bin/env"
