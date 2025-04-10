@@ -75,24 +75,10 @@ require("lazy").setup {
             ["q"] = "close_window",
           },
         },
-        -- system_prompt as function ensures LLM always has latest MCP server state
-        -- This is evaluated for every message, even in existing chats
-        system_prompt = function()
-          local success, hub = pcall(require("mcphub").get_hub_instance)
-          if success and hub then
-              return hub:get_active_servers_prompt()
-          else
-              vim.notify("Failed to get hub instance", vim.log.levels.ERROR)
-              return ""
-          end
-        end,
-        -- Using function prevents requiring mcphub before it's loaded
-        custom_tools = function()
-            return {
-                require("mcphub.extensions.avante").mcp_tool(),
-            }
-        end,
         filesystem = {
+          follow_current_file = {
+            enabled = true
+          },
           commands = {
             avante_add_files = function(state)
               local node = state.tree:get_node()
@@ -134,12 +120,13 @@ require("lazy").setup {
               "thumbs.db",
             },
           },
-          follow_current_file = true,
           hijack_netrw_behavior = "open_default",
           use_libuv_file_watcher = true,
         },
         buffers = {
-          follow_current_file = true,
+          follow_current_file = {
+            enabled = true
+          },
         },
         git_status = {
           window = {
@@ -259,13 +246,25 @@ require("lazy").setup {
         temperature = 0,
         max_tokens = 20480,
       },
-    },
-    file_selectors = {
-      provider = "fzf",
-    },
-    web_search_engine = {
-      provider = "tavily",
-      proxy = nil,
+      file_selectors = {
+        provider = "fzf",
+      },
+      web_search_engine = {
+        provider = "tavily",
+        proxy = nil,
+      },
+      -- system_prompt as function ensures LLM always has latest MCP server state
+      -- This is evaluated for every message, even in existing chats
+      system_prompt = function()
+          local hub = require("mcphub").get_hub_instance()
+          return hub:get_active_servers_prompt()
+      end,
+      -- Using function prevents requiring mcphub before it's loaded
+      custom_tools = function()
+          return {
+              require("mcphub.extensions.avante").mcp_tool(),
+          }
+      end,
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
@@ -348,6 +347,7 @@ keymap.set('n', '<C-j>', '<C-e>')
 keymap.set('n', '<C-k>', '<C-y>')
 keymap.set('n', '<C-n>', '<cmd>Neotree toggle<CR>')
 keymap.set('n', '<C-p>', '<cmd>AvanteToggle<CR>')
+keymap.set('n', '<C-;>', '<cmd>AvanteFocus<CR>')
 keymap.set('n', '\\', '<cmd>FzfLua commands<CR>')
 keymap.set('n', '<ESC><ESC>', '<cmd>nohlsearch<CR>')
 keymap.set('n', '<Up>', '<cmd>bnext<CR>')
