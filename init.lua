@@ -41,11 +41,6 @@ require("lazy").setup {
             last_indent_marker = "└",
             highlight = "NeoTreeIndentMarker",
           },
-          icon = {
-            folder_closed = "",
-            folder_open = "",
-            folder_empty = "ﰊ",
-          },
           modified = {
             symbol = "[+]",
             highlight = "NeoTreeModified",
@@ -141,7 +136,7 @@ require("lazy").setup {
     dependencies = {
         "nvim-lua/plenary.nvim",
     },
-    cmd = "MCPHub",  -- lazy load by default
+    cmd = "McpHub",  -- lazy load by default
     build = "npm install -g mcp-hub@latest",  -- Installs globally
     config = function()
         require("mcphub").setup({
@@ -154,7 +149,7 @@ require("lazy").setup {
             auto_approve = true,
             extensions = {
                 avante = {
-                    
+                  make_slash_commands = true,
                 },
             },
             
@@ -196,7 +191,18 @@ require("lazy").setup {
   },
   { 'tpope/vim-fugitive' },
   { 'tpope/vim-surround' },
-  { 'nvim-lualine/lualine.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' } },
+  { 'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('lualine').setup {
+        sections = {
+          lualine_x = {
+            { require('mcphub.extensions.lualine') },
+          },
+        },
+      }
+    end
+  },
   { 'prabirshrestha/vim-lsp' },
   { 'mattn/vim-lsp-settings' },
   { 'mattn/vim-lsp-icons' },
@@ -592,3 +598,4 @@ vim.g.lsp_log_verbose = 1
 vim.g.lsp_log_file = vim.fn.stdpath('cache') .. '/lsp.log'
 vim.g.lsp_diagnostics_enabled = 0
 vim.g.lsp_document_highlight_enabled = 0
+

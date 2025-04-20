@@ -82,4 +82,4 @@ if [ -f /usr/local/bin/tmux ]; then
 fi
 
 
-. "$HOME/.local/bin/env"
+#. "$HOME/.local/bin/env"
