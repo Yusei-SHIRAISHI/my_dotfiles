@@ -195,6 +195,15 @@ require("lazy").setup {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       require('lualine').setup {
+        options = {
+          disabled_filetypes = {
+            winbar = {
+              "Avante",
+              "AvanteSelectedFiles",
+              "AvanteInput",
+            },
+          },
+        },
         sections = {
           lualine_x = {
             { require('mcphub.extensions.lualine') },
@@ -203,9 +212,10 @@ require("lazy").setup {
       }
     end
   },
-  { 'prabirshrestha/vim-lsp' },
-  { 'mattn/vim-lsp-settings' },
-  { 'mattn/vim-lsp-icons' },
+  { "neovim/nvim-lspconfig" },
+  { "williamboman/mason.nvim" },
+  { "williamboman/mason-lspconfig.nvim" },
+  { "hrsh7th/cmp-nvim-lsp" },
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -289,7 +299,10 @@ require("lazy").setup {
       "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      "zbirenbaum/copilot.lua", -- for providers='copilot'
+      {
+          "github/copilot.vim",
+          lazy=false
+      },
       {
         -- support for image pasting
         "HakonHarnes/img-clip.nvim",
@@ -324,26 +337,19 @@ require("lazy").setup {
 }
 
 require('lualine').setup {
-  options = { theme = 'jellybeans' }
+  options = {
+    disabled_filetypes = {
+      winbar = {
+        "fugitive",
+        "neotree",
+      },
+    },
+    theme = 'jellybeans'
+  }
 }
 
-require("copilot").setup({
-  suggestion = {
-    enabled = true,
-    auto_trigger = true,
-    keymap = {
-      accept = "<Tab>",
-      accept_word = "<C-w>",
-      accept_line = "<C-l>",
-      next = "<C-j>",
-      prev = "<C-k>",
-      toggle_auto_trigger = "<C-r>"
-    },
-  },
-  filetypes = {
-    ["*"] = true
-  }
-})
+require("mason").setup()
+require("mason-lspconfig").setup()
 
 require('fzf-lua').register_ui_select()
 
@@ -363,8 +369,9 @@ keymap.set('n', '<Up>', '<cmd>bnext<CR>')
 keymap.set('n', '<Down>', '<cmd>bprevious<CR>')
 keymap.set('n', 'ZZ', '<Nop>')
 keymap.set('n', 'ZQ', '<Nop>')
-keymap.set('n', '<C-h><C-h>', '<cmd>LspDefinition<CR>')
-keymap.set('n', '<C-h>', '<cmd>LspHover<CR>')
+keymap.set('n', '<C-h><C-h>', '<cmd>lua vim.lsp.buf.definition()<CR>')
+keymap.set('n', '<C-h>', '<cmd>lua vim.lsp.buf.hover()<CR>')
+keymap.set('n', '<C-r><C-r>', '<cmd>lua vim.lsp.buf.rename()<CR>')
 
 keymap.set('n', tab_prefix, '<Nop>')
 keymap.set('n', tab_prefix .. 'n', '<cmd>tabnew<CR>')
@@ -376,8 +383,12 @@ keymap.set('n', tab_prefix .. 'S-l', '<cmd>+tabmove<CR>')
 keymap.set('n', tab_prefix .. 'S-h', '<cmd>-tabmove<CR>')
 
 --insert
-keymap.set('i', '<C-b>', '<Left>')
-keymap.set('i', '<C-f>', '<Right>')
+keymap.set('i', '<C-f>', '<Plug>(copilot-next)')
+keymap.set('i', '<C-b>', '<Plug>(copilot-previous)')
+keymap.set('i', '<C-w>', '<Plug>(copilot-accept-word)')
+keymap.set('i', '<C-l>', '<Plug>(copilot-accept-line)')
+keymap.set('i', '<C-r>r', '<Plug>(copilot-dismiss)')
+keymap.set('i', '<C-r>', '<Plug>(copilot-suggest)')
 -- insert file path use fuzzy find
 keymap.set({ 'n', 'i' }, '<C-x><C-i>',
   function()
