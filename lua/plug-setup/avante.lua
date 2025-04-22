@@ -1,5 +1,5 @@
-require("avante").setup({
-  opts = {
+return function()
+  require("avante").setup({
     provider = "copilot",
     auto_suggestions_provider = "copilot",
     behaviour = {
@@ -20,7 +20,7 @@ require("avante").setup({
         floating = true,
         start_insert = false,
         border = "rounded"
-      },
+      }
     },
     copilot = {
       endpoint = "https://api.githubcopilot.com",
@@ -34,5 +34,24 @@ require("avante").setup({
     file_selectors = {
       provider = "fzf",
     },
-  },
-})
+    web_search_engine = {
+      provider = "tavily",
+      proxy = nil,
+    },
+    -- system_prompt as function ensures LLM always has latest MCP server state
+    -- This is evaluated for every message, even in existing chats
+    system_prompt = function()
+        local hub = require("mcphub").get_hub_instance()
+        if not hub then
+            return
+        end
+        return hub:get_active_servers_prompt()
+    end,
+    -- Using function prevents requiring mcphub before it's loaded
+    custom_tools = function()
+        return {
+            require("mcphub.extensions.avante").mcp_tool(),
+        }
+    end,
+    })
+end

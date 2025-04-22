@@ -27,109 +27,7 @@ require("lazy").setup {
       "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
       "MunifTanjim/nui.nvim",
     },
-    config = function()
-      require('neo-tree').setup({
-        close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
-        popup_border_style = "rounded",
-        enable_git_status = true,
-        enable_diagnostics = true,
-        default_component_configs = {
-          indent = {
-            padding = 0,
-            with_markers = true,
-            indent_marker = "│",
-            last_indent_marker = "└",
-            highlight = "NeoTreeIndentMarker",
-          },
-          modified = {
-            symbol = "[+]",
-            highlight = "NeoTreeModified",
-          },
-          name = {
-            trailing_slash = false,
-            use_git_status_colors = true,
-          },
-        },
-        window = {
-          position = "left",
-          width = 40,
-          mappings = {
-            ["<space>"] = "toggle_node",
-            ["<2-LeftMouse>"] = "open",
-            ["<cr>"] = "open",
-            ["S"] = "open_split",
-            ["s"] = "open_vsplit",
-            ["C"] = "close_node",
-            ["R"] = "refresh",
-            ["a"] = "add",
-            ["d"] = "delete",
-            ["r"] = "rename",
-            ["c"] = "copy_to_clipboard",
-            ["x"] = "cut_to_clipboard",
-            ["p"] = "paste_from_clipboard",
-            ["q"] = "close_window",
-          },
-        },
-        filesystem = {
-          follow_current_file = {
-            enabled = true
-          },
-          commands = {
-            avante_add_files = function(state)
-              local node = state.tree:get_node()
-              local filepath = node:get_id()
-              local relative_path = require('avante.utils').relative_path(filepath)
-
-              local sidebar = require('avante').get()
-
-              local open = sidebar:is_open()
-              -- ensure avante sidebar is open
-              if not open then
-                require('avante.api').ask()
-                sidebar = require('avante').get()
-              end
-
-              sidebar.file_selector:add_selected_file(relative_path)
-
-              -- remove neo tree buffer
-              if not open then
-                sidebar.file_selector:remove_selected_file('neo-tree filesystem [1]')
-              end
-            end,
-          },
-          window = {
-            mappings = {
-              ['oa'] = 'avante_add_files',
-            },
-          },
-          filtered_items = {
-            visible = false,
-            hide_dotfiles = true,
-            hide_gitignored = true,
-            hide_by_name = {
-              ".DS_Store",
-              "thumbs.db",
-            },
-            never_show = {
-              ".DS_Store",
-              "thumbs.db",
-            },
-          },
-          hijack_netrw_behavior = "open_default",
-          use_libuv_file_watcher = true,
-        },
-        buffers = {
-          follow_current_file = {
-            enabled = true
-          },
-        },
-        git_status = {
-          window = {
-            position = "float",
-          },
-        },
-      })
-    end
+    config = require("plug-setup.neo-tree"),
   },
   {
     "ravitemer/mcphub.nvim",
@@ -138,45 +36,7 @@ require("lazy").setup {
     },
     cmd = "McpHub",  -- lazy load by default
     build = "npm install -g mcp-hub@latest",  -- Installs globally
-    config = function()
-        require("mcphub").setup({
-            -- Server configuration
-            port = 37373,                    -- Port for MCP Hub Express API
-            config = vim.fn.expand("~/.config/mcphub/servers.json"), -- Config file path
-            
-            native_servers = {}, -- add your native servers here
-            -- Extension configurations
-            auto_approve = true,
-            extensions = {
-                avante = {
-                  make_slash_commands = true,
-                },
-            },
-            
-            -- UI configuration
-            ui = {
-                window = {
-                    width = 0.8,      -- Window width (0-1 ratio)
-                    height = 0.8,     -- Window height (0-1 ratio)
-                    border = "rounded", -- Window border style
-                    relative = "editor", -- Window positioning
-                    zindex = 50,      -- Window stack order
-                },
-            },
-            
-            -- Event callbacks
-            on_ready = function(hub) end,  -- Called when hub is ready
-            on_error = function(err) end,  -- Called on errors
-            
-            -- Logging configuration
-            log = {
-                level = vim.log.levels.WARN,  -- Minimum log level
-                to_file = false,              -- Enable file logging
-                file_path = nil,              -- Custom log file path
-                prefix = "MCPHub"             -- Log message prefix
-            }
-        })
-    end,
+    config = require("plug-setup.mcphub"),
   },
   { 'vim-jp/vimdoc-ja' },
   { 'nanotech/jellybeans.vim' },
@@ -193,100 +53,18 @@ require("lazy").setup {
   { 'tpope/vim-surround' },
   { 'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      require('lualine').setup {
-        options = {
-          disabled_filetypes = {
-            winbar = {
-              "Avante",
-              "AvanteSelectedFiles",
-              "AvanteInput",
-            },
-          },
-        },
-        sections = {
-          lualine_x = {
-            { require('mcphub.extensions.lualine') },
-          },
-        },
-      }
-    end
+    config = require("plug-setup.lualine"),
   },
   { "neovim/nvim-lspconfig" },
   { "williamboman/mason.nvim" },
   { "williamboman/mason-lspconfig.nvim" },
   { "hrsh7th/cmp-nvim-lsp" },
   {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    ft = { "markdown" },
-    build = function()
-      vim.cmd [[Lazy load markdown-preview.nvim]]
-      vim.fn["mkdp#util#install"]()
-    end,
-  },
-  {
     "yetone/avante.nvim",
     enabled = true,
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
-    config = function()
-        require("avante").setup({
-          provider = "copilot",
-          auto_suggestions_provider = "copilot",
-          behaviour = {
-            auto_suggestions = true,
-            auto_set_highlight_group = true,
-            auto_set_keymaps = true,
-            auto_apply_diff_after_generation = true,
-            support_paste_from_clipboard = true,
-          },
-          windows = {
-            position = "right",
-            width = 30,
-            sidebar_header = {
-              align = "center",
-              rounded = false,
-            },
-            ask = {
-              floating = true,
-              start_insert = false,
-              border = "rounded"
-            }
-          },
-          copilot = {
-            endpoint = "https://api.githubcopilot.com",
-            model = "gpt-4o-2024-08-06",
-            proxy = nil, -- [protocol://]host[:port] Use this proxy
-            allow_insecure = false, -- Allow insecure server connections
-            timeout = 30000, -- Timeout in milliseconds
-            temperature = 0,
-            max_tokens = 20480,
-          },
-          file_selectors = {
-            provider = "fzf",
-          },
-          web_search_engine = {
-            provider = "tavily",
-            proxy = nil,
-          },
-          -- system_prompt as function ensures LLM always has latest MCP server state
-          -- This is evaluated for every message, even in existing chats
-          system_prompt = function()
-              local hub = require("mcphub").get_hub_instance()
-              if not hub then
-                  return
-              end
-              return hub:get_active_servers_prompt()
-          end,
-          -- Using function prevents requiring mcphub before it's loaded
-          custom_tools = function()
-              return {
-                  require("mcphub.extensions.avante").mcp_tool(),
-              }
-          end,
-        })
-    end,
+    config = require("plug-setup.avante"),
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
     -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
@@ -299,27 +77,7 @@ require("lazy").setup {
       "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      {
-          "github/copilot.vim",
-          lazy=false
-      },
-      {
-        -- support for image pasting
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
-        },
-      },
+      { "github/copilot.vim", lazy=false },
       {
         -- Make sure to set this up properly if you have lazy=true
         'MeanderingProgrammer/render-markdown.nvim',
@@ -334,18 +92,6 @@ require("lazy").setup {
     'mechatroner/rainbow_csv',
     ft = { 'csv' },
   },
-}
-
-require('lualine').setup {
-  options = {
-    disabled_filetypes = {
-      winbar = {
-        "fugitive",
-        "neotree",
-      },
-    },
-    theme = 'jellybeans'
-  }
 }
 
 require("mason").setup()

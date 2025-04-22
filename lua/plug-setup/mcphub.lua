@@ -1,5 +1,5 @@
-
-require("mcphub").setup({
+return function()
+  require("mcphub").setup({
     -- Server configuration
     port = 37373,                    -- Port for MCP Hub Express API
     config = vim.fn.expand("~/.config/mcphub/servers.json"), -- Config file path
@@ -9,7 +9,7 @@ require("mcphub").setup({
     auto_approve = true,
     extensions = {
         avante = {
-            
+          make_slash_commands = true,
         },
     },
     
@@ -35,4 +35,5 @@ require("mcphub").setup({
         file_path = nil,              -- Custom log file path
         prefix = "MCPHub"             -- Log message prefix
     }
-})
+  })
+end
