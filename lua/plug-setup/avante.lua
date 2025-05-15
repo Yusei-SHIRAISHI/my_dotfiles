@@ -38,6 +38,11 @@ return function()
       provider = "tavily",
       proxy = nil,
     },
+    mappings = {
+      sidebar = {
+        switch_windows = nil,
+      }
+    },
     -- system_prompt as function ensures LLM always has latest MCP server state
     -- This is evaluated for every message, even in existing chats
     system_prompt = function()
