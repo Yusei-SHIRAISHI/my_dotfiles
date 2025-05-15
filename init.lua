@@ -117,7 +117,6 @@ keymap.set('n', 'ZZ', '<Nop>')
 keymap.set('n', 'ZQ', '<Nop>')
 keymap.set('n', '<C-h><C-h>', '<cmd>lua vim.lsp.buf.definition()<CR>')
 keymap.set('n', '<C-h>', '<cmd>lua vim.lsp.buf.hover()<CR>')
-keymap.set('n', '<C-r><C-r>', '<cmd>lua vim.lsp.buf.rename()<CR>')
 
 keymap.set('n', tab_prefix, '<Nop>')
 keymap.set('n', tab_prefix .. 'n', '<cmd>tabnew<CR>')
@@ -240,35 +239,6 @@ autocmd({ "VimEnter", "WinEnter" }, {
   end
 })
 
--- Custom command
-vim.api.nvim_create_user_command(
-  'Sjis',
-  function()
-    vim.cmd('edit ++enc=cp932')
-  end,
-  {}
-)
-vim.api.nvim_create_user_command(
-  'Utf8',
-  function()
-    vim.cmd('edit ++enc=utf-8')
-  end,
-  {}
-)
-vim.api.nvim_create_user_command(
-  'CC',
-  function()
-    vim.opt.cursorcolumn = not vim.opt.cursorcolumn:get()
-  end,
-  {}
-)
-vim.api.nvim_create_user_command(
-  'Filename',
-  function()
-    print(vim.fn.expand('%:t'))
-  end,
-  {}
-)
 
 local function to_snake_case(str)
   return str:gsub("(%l)(%u)", "%1_%2"):gsub("%s+", "_"):lower()
@@ -319,6 +289,23 @@ local function convert_selection_to_case(case_converter)
   end
 end
 
+-- Custom command
+vim.api.nvim_create_user_command('Sjis', function()
+  vim.cmd('edit ++enc=cp932')
+end, {})
+
+vim.api.nvim_create_user_command('Utf8', function()
+  vim.cmd('edit ++enc=utf-8')
+end, {})
+
+vim.api.nvim_create_user_command('CC', function()
+  vim.opt.cursorcolumn = not vim.opt.cursorcolumn:get()
+end, {})
+
+vim.api.nvim_create_user_command('Filename', function()
+  print(vim.fn.expand('%:t'))
+end, {})
+
 vim.api.nvim_create_user_command('SnakeCase', function()
   convert_selection_to_case(to_snake_case)
 end, { range = true })
@@ -333,6 +320,10 @@ end, {})
 
 vim.api.nvim_create_user_command('F', function()
   require('fzf-lua').files()
+end, {})
+
+vim.api.nvim_create_user_command('Rename', function()
+    vim.lsp.buf.rename()
 end, {})
 
 -- WSL clipboard
