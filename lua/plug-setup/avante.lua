@@ -1,6 +1,19 @@
 return function()
   require("avante").setup({
-    provider = "copilot",
+    providers = {
+      copilot = {
+        endpoint = "https://api.githubcopilot.com",
+        --model = "gpt-4o-2024-08-06",
+        model = "claude-sonnet-4-20250514",
+        proxy = nil, -- [protocol://]host[:port] Use this proxy
+        allow_insecure = false, -- Allow insecure server connections
+        timeout = 30000, -- Timeout in milliseconds
+        extra_request_body = {
+          temperature = 0,
+          max_tokens = 20480,
+        },
+      },
+    },
     auto_suggestions_provider = "copilot",
     behaviour = {
       auto_suggestions = true,
@@ -21,15 +34,6 @@ return function()
         start_insert = false,
         border = "rounded"
       }
-    },
-    copilot = {
-      endpoint = "https://api.githubcopilot.com",
-      model = "gpt-4o-2024-08-06",
-      proxy = nil, -- [protocol://]host[:port] Use this proxy
-      allow_insecure = false, -- Allow insecure server connections
-      timeout = 30000, -- Timeout in milliseconds
-      temperature = 0,
-      max_tokens = 20480,
     },
     file_selectors = {
       provider = "fzf",
