@@ -1,10 +1,10 @@
 return function()
   require("avante").setup({
+    provider = "copilot",
     providers = {
       copilot = {
         endpoint = "https://api.githubcopilot.com",
-        --model = "gpt-4o-2024-08-06",
-        model = "claude-sonnet-4-20250514",
+        model = "claude-sonnet-4",
         proxy = nil, -- [protocol://]host[:port] Use this proxy
         allow_insecure = false, -- Allow insecure server connections
         timeout = 30000, -- Timeout in milliseconds
