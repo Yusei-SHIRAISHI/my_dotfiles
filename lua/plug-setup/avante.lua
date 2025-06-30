@@ -4,7 +4,7 @@ return function()
     provider = "copilot",
     providers = {
       copilot = {
-        model = "gpt-4o",
+        model = "gpt-4.1",
         --model = "claude-sonnet-4",
       },
     },
