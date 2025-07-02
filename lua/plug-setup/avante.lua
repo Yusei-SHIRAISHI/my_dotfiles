@@ -38,7 +38,7 @@ return function()
     },
     mappings = {
       sidebar = {
-        switch_windows = nil,
+        switch_windows = "<C-001>",
       }
     },
     -- system_prompt as function ensures LLM always has latest MCP server state
