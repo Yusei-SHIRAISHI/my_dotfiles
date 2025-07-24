@@ -69,13 +69,11 @@ require("lazy").setup {
     build = "make",
     -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "stevearc/dressing.nvim",
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
-      --- The below dependencies are optional,
-      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
+      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+      "stevearc/dressing.nvim",
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
       { "github/copilot.vim", lazy=false },
       {

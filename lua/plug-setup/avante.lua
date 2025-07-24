@@ -26,7 +26,6 @@ return function()
       ask = {
         floating = true,
         start_insert = false,
-        border = "rounded"
       }
     },
     file_selectors = {
