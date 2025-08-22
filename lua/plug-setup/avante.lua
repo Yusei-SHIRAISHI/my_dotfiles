@@ -31,6 +31,14 @@ return function()
     file_selectors = {
       provider = "fzf",
     },
+    input = {
+      provider = "snacks",
+      provider_opts = {
+        title = "Avante Input",
+        icon = " ",
+        placeholder = "Type your message here...",
+      }
+    },
     web_search_engine = {
       provider = "tavily",
       proxy = nil,

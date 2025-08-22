@@ -20,14 +20,11 @@ local tab_prefix = '<S-t>'
 
 require("lazy").setup {
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    requires = { 
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-      "MunifTanjim/nui.nvim",
+    "nvim-tree/nvim-tree.lua",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons", -- optional, for file icons
     },
-    config = require("plug-setup.neo-tree"),
+    config = require("plug-setup.nvim-tree"),
   },
   {
     "ravitemer/mcphub.nvim",
@@ -72,8 +69,8 @@ require("lazy").setup {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
-      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-      "stevearc/dressing.nvim",
+      "hrsh8th/nvim-cmp", -- autocompletion for avante commands and mentions
+      "folke/snacks.nvim",
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
       {
         'zbirenbaum/copilot.lua',
@@ -121,7 +118,7 @@ keymap.set('n', 'gj', 'j')
 keymap.set('n', 'gk', 'k')
 keymap.set('n', '<C-j>', '<C-e>')
 keymap.set('n', '<C-k>', '<C-y>')
-keymap.set('n', '<C-n>', '<cmd>Neotree toggle<CR>')
+keymap.set('n', '<C-n>', '<cmd>NvimTreeToggle<CR>')
 keymap.set('n', '\\', '<cmd>FzfLua commands<CR>')
 keymap.set('n', '<ESC><ESC>', '<cmd>nohlsearch<CR>')
 keymap.set('n', '<Up>', '<cmd>bnext<CR>')
