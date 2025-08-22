@@ -75,7 +75,22 @@ require("lazy").setup {
       "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
       "stevearc/dressing.nvim",
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      { "github/copilot.vim", lazy=false },
+      {
+        'zbirenbaum/copilot.lua',
+        event = 'InsertEnter',
+        opts = {
+          panel = {
+            enabled = false,
+          },
+          suggestion = {
+            auto_trigger = true,
+            hide_during_completion = false,
+            keymap = {
+              accept = '<Tab>',
+            },
+          },
+        },
+      },
       {
         -- Make sure to set this up properly if you have lazy=true
         'MeanderingProgrammer/render-markdown.nvim',
@@ -126,12 +141,40 @@ keymap.set('n', tab_prefix .. 'S-l', '<cmd>+tabmove<CR>')
 keymap.set('n', tab_prefix .. 'S-h', '<cmd>-tabmove<CR>')
 
 --insert
-keymap.set('i', '<C-f>', '<Plug>(copilot-next)')
-keymap.set('i', '<C-b>', '<Plug>(copilot-previous)')
-keymap.set('i', '<C-w>', '<Plug>(copilot-accept-word)')
-keymap.set('i', '<C-l>', '<Plug>(copilot-accept-line)')
-keymap.set('i', '<C-r>r', '<Plug>(copilot-dismiss)')
-keymap.set('i', '<C-r>', '<Plug>(copilot-suggest)')
+keymap.set('i', '<C-f>', function()
+  if require("copilot.suggestion").is_visible() then
+    require("copilot.suggestion").next()
+  end
+end, { expr = false, silent = true })
+
+keymap.set('i', '<C-b>', function()
+  if require("copilot.suggestion").is_visible() then
+    require("copilot.suggestion").prev()
+  end
+end, { expr = false, silent = true })
+
+keymap.set('i', '<C-w>', function()
+  if require("copilot.suggestion").is_visible() then
+    require("copilot.suggestion").accept_word()
+  end
+end, { expr = false, silent = true })
+
+keymap.set('i', '<C-l>', function()
+  if require("copilot.suggestion").is_visible() then
+    require("copilot.suggestion").accept_line()
+  end
+end, { expr = false, silent = true })
+
+keymap.set('i', '<C-r>r', function()
+  if require("copilot.suggestion").is_visible() then
+    require("copilot.suggestion").dismiss()
+  end
+end, { expr = false, silent = true })
+
+keymap.set('i', '<C-r>', function()
+  require("copilot.suggestion").toggle_auto_trigger()
+end, { expr = false, silent = true })
+
 -- insert file path use fuzzy find
 keymap.set({ 'n', 'i' }, '<C-x><C-i>',
   function()
