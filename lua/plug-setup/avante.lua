@@ -31,6 +31,10 @@ return function()
     file_selectors = {
       provider = "fzf",
     },
+    selector = {
+      provider = "fzf",
+      provider_opts = {},
+    },
     input = {
       provider = "snacks",
       provider_opts = {

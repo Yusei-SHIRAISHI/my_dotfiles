@@ -27,6 +27,19 @@ require("lazy").setup {
     config = require("plug-setup.nvim-tree"),
   },
   {
+    "saghen/blink.cmp",
+    version = "*",
+    opts = {
+      keymap = {
+        preset = "default",
+        ['<C-e>'] = { 'hide', 'show' },
+      },
+      sources = {
+        default = { 'lsp', 'path', 'buffer'},
+      },
+    },
+  },
+  {
     "ravitemer/mcphub.nvim",
     dependencies = {
         "nvim-lua/plenary.nvim",
@@ -52,10 +65,8 @@ require("lazy").setup {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = require("plug-setup.lualine"),
   },
-  { "neovim/nvim-lspconfig" },
   { "williamboman/mason.nvim" },
   { "williamboman/mason-lspconfig.nvim" },
-  { "hrsh7th/cmp-nvim-lsp" },
   {
     "yetone/avante.nvim",
     enabled = true,
@@ -69,7 +80,7 @@ require("lazy").setup {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
-      "hrsh8th/nvim-cmp", -- autocompletion for avante commands and mentions
+
       "folke/snacks.nvim",
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
       {
@@ -171,18 +182,6 @@ end, { expr = false, silent = true })
 keymap.set('i', '<C-r>', function()
   require("copilot.suggestion").toggle_auto_trigger()
 end, { expr = false, silent = true })
-
--- insert file path use fuzzy find
-keymap.set({ 'n', 'i' }, '<C-x><C-i>',
-  function()
-    require("fzf-lua").fzf_exec("rg --files",
-      { actions = { ['enter'] = function(selected, opts)
-        vim.api.nvim_put(selected, "c", true, true)
-      end } })
-    vim.cmd("startinsert")
-  end,
-  { silent = true, desc = "Fuzzy insert path" }
-)
 
 --visual
 keymap.set('v', '<C-j>', '<C-e>')
