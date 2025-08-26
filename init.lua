@@ -65,10 +65,27 @@ require("lazy").setup {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = require("plug-setup.lualine"),
   },
-  { "williamboman/mason.nvim" },
-  { "williamboman/mason-lspconfig.nvim" },
   {
-    "yetone/avante.nvim",
+    "williamboman/mason.nvim",
+    build = ":MasonUpdate",
+    opts = {
+      PATH = "append",
+    },
+  },
+  { "neovim/nvim-lspconfig" },
+  { 
+    "mason-org/mason-lspconfig.nvim",
+    opts = {
+      ensure_installed = { "rust_analyzer" },
+      automatic_enable = true,
+    },
+    dependencies = {
+      { "williamboman/mason.nvim" },
+      { "neovim/nvim-lspconfig" },
+    },
+  },
+  {
+   "yetone/avante.nvim",
     enabled = true,
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
@@ -114,9 +131,6 @@ require("lazy").setup {
     ft = { 'csv' },
   },
 }
-
-require("mason").setup()
-require("mason-lspconfig").setup()
 
 require('fzf-lua').register_ui_select()
 
