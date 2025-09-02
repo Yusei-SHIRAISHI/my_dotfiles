@@ -152,6 +152,8 @@ keymap.set('n', 'ZZ', '<Nop>')
 keymap.set('n', 'ZQ', '<Nop>')
 keymap.set('n', '<C-h><C-h>', '<cmd>lua vim.lsp.buf.definition()<CR>')
 keymap.set('n', '<C-h>', '<cmd>lua vim.lsp.buf.hover()<CR>')
+keymap.set('n', '<C-/>', '<cmd>ShowDiagnosticsOrHover<CR>', { silent = true })
+keymap.set('n', '<C-_>', '<cmd>ShowDiagnosticsOrHover<CR>', { silent = true })
 
 keymap.set('n', tab_prefix, '<Nop>')
 keymap.set('n', tab_prefix .. 'n', '<cmd>tabnew<CR>')
@@ -340,6 +342,17 @@ local function convert_selection_to_case(case_converter)
   end
 end
 
+local function show_diagnostics_or_hover()
+  local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+  local diags = vim.diagnostic.get(0, { lnum = line })
+  if #diags > 0 then
+    vim.diagnostic.open_float(nil, { scope = 'line', border = 'rounded' })
+  else
+    -- Fallback to hover when no diagnostics present
+    vim.lsp.buf.hover()
+  end
+end
+
 -- Custom command
 vim.api.nvim_create_user_command('Sjis', function()
   vim.cmd('edit ++enc=cp932')
@@ -377,6 +390,10 @@ vim.api.nvim_create_user_command('Rename', function()
     vim.lsp.buf.rename()
 end, {})
 
+vim.api.nvim_create_user_command('ShowDiagnosticsOrHover', function()
+    show_diagnostics_or_hover()
+end, {})
+
 -- WSL clipboard
 if os.getenv("WSL_DISTRO_NAME") ~= nil then
   local clip = 'iconv -t sjis | clip.exe'
@@ -397,4 +414,3 @@ vim.g.lsp_log_verbose = 1
 vim.g.lsp_log_file = vim.fn.stdpath('cache') .. '/lsp.log'
 vim.g.lsp_diagnostics_enabled = 0
 vim.g.lsp_document_highlight_enabled = 0
-
