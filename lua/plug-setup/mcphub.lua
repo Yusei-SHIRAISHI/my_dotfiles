@@ -7,11 +7,6 @@ return function()
     native_servers = {}, -- add your native servers here
     -- Extension configurations
     auto_approve = true,
-    extensions = {
-        avante = {
-          make_slash_commands = true,
-        },
-    },
     
     -- UI configuration
     ui = {

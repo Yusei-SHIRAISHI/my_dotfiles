@@ -85,46 +85,31 @@ require("lazy").setup {
     },
   },
   {
-   "yetone/avante.nvim",
-    enabled = true,
-    event = "VeryLazy",
-    version = false, -- Never set this value to "*"! Never!
-    config = require("plug-setup.avante"),
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = "make",
-    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      "ibhagwan/fzf-lua", -- for file_selector provider fzf
-
-      "folke/snacks.nvim",
-      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      {
-        'zbirenbaum/copilot.lua',
-        event = 'InsertEnter',
-        opts = {
-          panel = {
-            enabled = false,
-          },
-          suggestion = {
-            auto_trigger = true,
-            hide_during_completion = false,
-            keymap = {
-              accept = '<Tab>',
-            },
-          },
-        },
+    'zbirenbaum/copilot.lua',
+    event = 'InsertEnter',
+    opts = {
+      panel = {
+        enabled = false,
       },
-      {
-        -- Make sure to set this up properly if you have lazy=true
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { "markdown", "Avante" },
+      suggestion = {
+        auto_trigger = true,
+        hide_during_completion = false,
+        keymap = {
+          accept = '<Tab>',
         },
-        ft = { "markdown", "Avante" },
       },
     },
+  },
+  {
+    -- Make sure to set this up properly if you have lazy=true
+    'MeanderingProgrammer/render-markdown.nvim',
+    opts = {
+      file_types = { "markdown" },
+      sign = {
+        enabled = false,
+      },
+    },
+    ft = { "markdown" },
   },
   {
     'mechatroner/rainbow_csv',
