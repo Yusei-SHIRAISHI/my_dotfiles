@@ -1,0 +1,1 @@
+prefix_rule(pattern=["bundle", "exec", "rspec"], decision="allow")

@@ -1,0 +1,56 @@
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+personality = "pragmatic"
+plan_mode_reasoning_effort = "high"
+
+[notice]
+"hide_gpt-5.1-codex-max_migration_prompt" = true
+
+[notice.model_migrations]
+"gpt-5.2" = "gpt-5.2-codex"
+"gpt-5.2-codex" = "gpt-5.3-codex"
+
+[features]
+unified_exec = true
+shell_snapshot = true
+multi_agent = true
+apps = true
+
+[agents.default]
+description = "Orchestrates tasks, assigns skills and reviews, updates Plane, and integrates outcomes."
+config_file = "agents/default.toml"
+
+[agents.worker]
+description = "Implements assigned tasks with minimal diffs, tests, and evidence, without updating Plane directly."
+config_file = "agents/worker.toml"
+
+[agents.reviewer]
+description = "Performs independent review tasks; workflow lives in AGENTS.md and review criteria live in agents/reviewer.toml."
+config_file = "agents/reviewer.toml"
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp"]
+
+[mcp_servers.github_personal]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+
+[mcp_servers.github_personal.env]
+GITHUB_PERSONAL_ACCESS_TOKEN = "set-me-locally"
+
+[mcp_servers.github_quickry]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+
+[mcp_servers.github_quickry.env]
+GITHUB_PERSONAL_ACCESS_TOKEN = "set-me-locally"
+
+[mcp_servers.plane]
+command = "uvx"
+args = ["plane-mcp-server", "stdio"]
+
+[mcp_servers.plane.env]
+PLANE_BASE_URL = "set-me-locally"
+PLANE_API_KEY = "set-me-locally"
+PLANE_WORKSPACE_SLUG = "set-me-locally"
