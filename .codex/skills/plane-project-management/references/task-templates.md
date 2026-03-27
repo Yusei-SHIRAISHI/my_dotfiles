@@ -41,6 +41,7 @@ Use these templates when the `default` orchestrator is shaping work in Plane.
 - Skills: required supporting skills
 - Output Format: expected review structure
 - Blocking Rule: whether the target implementation item can move to `Done` before this review completes
+- Review Completion Action: move target to `Done`, return it for revision, or create / activate a follow-up implementation item
 
 ## Feasibility Work Item Template
 
@@ -54,10 +55,14 @@ Use these templates when the `default` orchestrator is shaping work in Plane.
 
 ## Default Start Template
 
+- Existing Item Check: which project / module / open items were checked, and why reuse was or was not chosen
+- Related Item Comments: which related items had comments reviewed, and what decision-relevant context they contained
 - Goal:
 - AC:
 - Module:
 - Split: why this structure and sequence were chosen
+- Review Completion Action: whether review ends the item or hands off to a separate implementation item
+- Follow-up Implementation: whether a post-review implementation item already exists or must be created
 - Skills:
 - Assignments:
 - Review Tasks:

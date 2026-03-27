@@ -9,6 +9,7 @@ This reference captures the local Plane operating model used by the `default` or
 - Standard hierarchy is `project -> module -> work item`.
 - `cycle` is not used.
 - `Close` means moving a work item to `Done`.
+- New work items are not created blindly. Existing open items must be checked first for reuse or extension.
 
 ## Start States
 
@@ -28,8 +29,11 @@ Use this path when the user starts a new product area or repository and there is
 Use this path when a matching Plane project already exists.
 
 1. Locate the correct `module`.
-2. Reuse it if the work belongs there.
-3. Create a new module only if the work introduces a new responsibility boundary.
+2. Search existing open work items in that module and nearby related modules.
+3. Read comments on any related work item before deciding whether it is still active, partially superseded, or suitable for reuse.
+4. Reuse or extend an existing work item when it still represents the same intent and can keep a clean `Done` decision.
+5. Create a new work item only when reuse would mix separate intents, owners, or review gates.
+6. Create a new module only if the work introduces a new responsibility boundary.
 
 ## Work Item Structuring
 
@@ -95,9 +99,29 @@ Do not use a feasibility item as a bucket for the full implementation. Its outco
 
 - `Backlog`: the work exists but is not shaped enough to start.
 - `Todo`: the work is defined and can be picked up.
-- `In Progress`: an agent is actively executing or reviewing it.
+- `In Progress`: an agent is actively executing, investigating, or preparing an artifact.
+- `In Review`: the artifact has reached a human review gate. The next state decision is human-owned.
 - `Done`: acceptance criteria and required reviews are complete.
 - `Cancelled`: the work is intentionally stopped.
+
+Use `In Review` for review-required checkpoints inside a work item when further agent work should pause until a person approves or redirects it. Typical examples:
+
+- `test-cases`
+- function I/O design
+- type definition design
+
+Do not move items out of `In Review` automatically. The human reviewer decides whether the item should:
+
+- move to `Done`
+- return to `Todo`
+- return to `In Progress`
+- be split into follow-up implementation or review items
+
+Recommended default after design review:
+
+- If approval leads to a separate implementation artifact, keep the design item as the review checkpoint and create or activate a separate implementation item.
+- Do not routinely send the same design item back to `In Progress` for a broader implementation phase.
+- Reuse the same item after review only when the remaining implementation is small and the item still preserves one intent and one `Done` condition.
 
 ## Review Routing
 
@@ -124,6 +148,25 @@ Create independent `reviewer` items and choose the review type explicitly.
 - Bug fix
 - Invariants or state transitions change
 - Important I/O or retry/timeout behavior changes
+
+### Use `In Review` instead of a separate review item when
+
+- the work item's primary output is the design or review artifact itself
+- the implementation should not continue until a human makes a decision
+- keeping the review inside the same item preserves one clear intent
+
+### Use a separate review item when
+
+- the review is a hard gate for a broader parent item
+- the implementation and the review have different outputs or different owners
+- the implementation will continue as a separate task after the design is approved
+- the review should be tracked independently for auditability or coordination
+
+### Split design and implementation into separate items by default when
+
+- the design artifact must be approved before implementation starts
+- approval leads to a different primary artifact, such as code, tests, or schema updates
+- resuming the same item after review would mix design and implementation in one `Done` decision
 
 ### Add `code-quality`
 

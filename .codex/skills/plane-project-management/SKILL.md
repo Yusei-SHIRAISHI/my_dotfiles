@@ -7,7 +7,7 @@ description: "Use this skill when the default orchestrator needs to manage work 
 
 ## Overview
 
-This skill guides the `default` orchestrator through the local Plane-based workflow from project creation to final `Done` judgement. It assumes the current `/home/shira/.codex/AGENTS.md` rules: Plane is the only execution ledger, `module + work item + relation` is the standard structure, and the `default` agent is the only agent that updates Plane.
+This skill guides the `default` orchestrator through the local Plane-based workflow from project and existing-item discovery to final `Done` judgement. It assumes the current `/home/shira/.codex/AGENTS.md` rules: Plane is the only execution ledger, `module + work item + relation` is the standard structure, and the `default` agent is the only agent that updates Plane.
 
 ## When To Use
 
@@ -27,8 +27,11 @@ Do not use this skill for implementation details inside a single task. Once the 
 
 - Check whether the target Plane `project` already exists.
 - If it does not exist, create the Plane project before creating any work item.
+- Before creating any new work item, check whether an existing open item already captures the same intent, review gate, or deliverable.
+- When an existing item looks related, read its comments before deciding whether to reuse, extend, or replace it.
+- Reuse and update an existing item when the goal, artifact, and ownership still fit. Create a new item only when reuse would blur the `Done` decision or mix separate intents.
 - Choose the target `module`. Decide modules by responsibility boundary first, not by file or screen.
-- Confirm the state model is the local standard: `Backlog`, `Todo`, `In Progress`, `Done`, `Cancelled`.
+- Confirm the state model is the local standard: `Backlog`, `Todo`, `In Progress`, `In Review`, `Done`, `Cancelled`.
 - In this workflow, `Close` means moving a work item to `Done`.
 
 For a new project, prefer this startup order:
@@ -59,6 +62,9 @@ For a new project, prefer this startup order:
 - Use `blocked_by` when one item cannot start or finish until another item completes.
 - Use `relates_to` when the work is connected but not strictly blocked.
 - Leave blocked work in `Todo` until the dependency clears. Move actively worked items to `In Progress`.
+- Use `In Review` when a work item has reached a human review gate and the next transition must be decided by a person.
+- Typical `In Review` checkpoints include `test-cases`, function I/O design, and type definition design.
+- When an item moves to `In Review`, the AI agent should stop changing its status. Transitions out of `In Review` are human-owned.
 
 ### 4. Attach the right reviews
 
@@ -66,10 +72,17 @@ For a new project, prefer this startup order:
 - Add `architecture` review items when business rules, invariants, boundaries, or infrastructure structure are changing.
 - Add `design` review items when user-facing UI, navigation, or information hierarchy changes.
 - Add `test-cases` review items when bug fixes, invariants, important branching, or important I/O are involved.
+- Treat `test-cases`, function I/O design, and type definition design as review-required checkpoints even when they are embedded in a broader implementation plan.
 - Add `code-quality` review items when the refactor risk or maintenance cost needs independent judgement.
 - Add `security` review items when auth, external input, secrets, dependencies, infra, or money flows are involved.
 - Attach the right skill to the plan: `clean-ddd-hexagonal`, `aws-solution-architect`, `terraform-style-guide`, `web-design-guidelines`, or others as needed.
 - If the review is a hard gate, create a dedicated review item and make the implementation item or parent item depend on it.
+- Prefer a dedicated review item when the review result can independently pass or fail while the implementation work continues as a separate artifact.
+- Prefer moving the current item to `In Review` when that item's primary output is the design decision itself and further agent work should pause until a human approves or redirects it.
+- When a design artifact must be approved before a separate implementation artifact can begin, split the work into a design item and an implementation item by default.
+- Do not treat `In Review` as the standard way to pause a design item and then resume the same item for a larger implementation phase.
+- Returning a design item from `In Review` to `In Progress` for continued implementation is an exception path only.
+- Allow that exception only when the implementation delta is small and the same item can still keep one clear intent and one clear `Done` decision.
 
 ### 5. Decide when an item is ready for Done
 
@@ -85,6 +98,7 @@ For a new project, prefer this startup order:
 - Do not manage active work purely in chat.
 - Do not use `cycle` in this local workflow.
 - Prefer the smallest structure that preserves safety and clarity.
+- Do not create duplicate items by default. Search existing project, module, and open work items first.
 - Keep task titles and acceptance criteria concrete enough that another agent can act without inventing missing decisions.
 - Use `Split` to explain why the chosen structure is parent/child, sibling-only, or includes a standalone feasibility item.
 - Treat connectivity checks as feasibility work, not as a bucket for the real implementation.
