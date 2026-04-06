@@ -69,6 +69,17 @@ setopt print_eight_bit
 export LANG=ja_JP.UTF-8
 export LC_ALL=ja_JP.UTF-8
 
+if [[ -d "$HOME/.local/bin" ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Let tmux own mouse selection when running opencode inside a tmux pane.
+if [[ -n "$TMUX" ]]; then
+  export OPENCODE_DISABLE_MOUSE=true
+else
+  unset OPENCODE_DISABLE_MOUSE
+fi
+
 
 #alias
 alias ls="ls --color=auto -F"
