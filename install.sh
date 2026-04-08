@@ -1,35 +1,12 @@
-#! /bin/bash
+#!/bin/sh
 
-#
-# install dotfiles
-#
+set -eu
 
-set -e
+current_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
-execdatetime=$(date +%Y-%m-%d-%H:%M:%S)
-currentDir=$(cd "$(dirname "$0")"; pwd)
-backupDir="$HOME/.dotfiles.backup"
-[ -d "$backupDir" ] || mkdir -p "$backupDir"
-
-makeLinksToHomeDir(){
-  for x in "$@"; do
-    if [ -e "$HOME/$x" ] || [ -L "$HOME/$x" ]; then
-      cp -af "$HOME/$x" "$backupDir/$x.$execdatetime.backup"
-    fi
-    ln -sfn "$currentDir/$x" "$HOME/$x"
-  done
-}
-
-installList=(".bashrc" ".vimrc" ".tmux.conf" ".zshrc" ".gitconfig")
-makeLinksToHomeDir "${installList[@]}"
-
-mkdir -p "$HOME/.config/nvim/lua"
-ln -sfn "$currentDir/init.lua" "$HOME/.config/nvim/init.lua"
-ln -sfn "$currentDir/prompts" "$HOME/.config/nvim/lua/prompts"
-
-if [ -e "$HOME/.codex" ] && [ ! -L "$HOME/.codex" ]; then
-  mv "$HOME/.codex" "$backupDir/.codex.$execdatetime.backup"
+if ! command -v chezmoi >/dev/null 2>&1; then
+  printf '%s\n' 'chezmoi is required. Install it first: https://www.chezmoi.io/install/' >&2
+  exit 1
 fi
-ln -sfn "$currentDir/.codex" "$HOME/.codex"
 
-exit 0
+exec chezmoi apply --source "$current_dir" --verbose
