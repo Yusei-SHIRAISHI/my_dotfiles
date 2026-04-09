@@ -1,7 +1,7 @@
-if [[ -d $HOME/.zsh.d ]];then
-  for x in `ls $HOME/.zsh.d/`;do
-      source $HOME/.zsh.d/${x}
-  done
+if [[ -f "$HOME/.env" ]]; then
+  set -a
+  . "$HOME/.env"
+  set +a
 fi
 
 setopt SH_WORD_SPLIT
@@ -67,7 +67,7 @@ setopt print_eight_bit
 
 #export
 export LANG=ja_JP.UTF-8
-export LC_ALL=ja_JP.UTF-8
+# export LC_ALL=ja_JP.UTF-8
 
 if [[ -d "$HOME/.local/bin" ]]; then
   export PATH="$HOME/.local/bin:$PATH"
@@ -80,17 +80,32 @@ else
   unset OPENCODE_DISABLE_MOUSE
 fi
 
+export EDITOR=nvim
+
 
 #alias
 alias ls="ls --color=auto -F"
 alias la='ls -a'
 alias ll='ls -l -a'
 alias cl='clear'
+alias vim='nvim'
+alias obsidian-server="obsidian > /dev/null 2>&1 &"
+alias obsidian-kill="flatpak kill md.obsidian.Obsidian"
 
 if [ -f /usr/local/bin/tmux ]; then
     alias t="tmux";
     alias tls="tmux ls";
 fi
+
+{{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+
+export GDK_SCALE=2
+export GDK_DPI_SCALE=0.75
+
+function open() {
+  cmd.exe /c start "$(wslpath -w "$1")"
+}
+{{- end }}
 
 
 #. "$HOME/.local/bin/env"
