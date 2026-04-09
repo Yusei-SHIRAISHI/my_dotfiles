@@ -1,3 +1,8 @@
+{{- $sshKeyItem := bitwarden "item" "ssh-github" -}}
+{{- with index $sshKeyItem "sshKey" -}}
+{{- with index . "privateKey" -}}
+{{- . -}}
+{{- else -}}
 {{- $sshKeyFields := bitwardenFields "item" "ssh-github" -}}
 {{- with index $sshKeyFields "秘密鍵" -}}
 {{- .value -}}
@@ -6,5 +11,18 @@
 {{- .value -}}
 {{- else -}}
 {{- bitwardenAttachmentByRef "id_rsa" "item" "ssh-github" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- else -}}
+{{- $sshKeyFields := bitwardenFields "item" "ssh-github" -}}
+{{- with index $sshKeyFields "秘密鍵" -}}
+{{- .value -}}
+{{- else -}}
+{{- with index $sshKeyFields "Private Key" -}}
+{{- .value -}}
+{{- else -}}
+{{- bitwardenAttachmentByRef "id_rsa" "item" "ssh-github" -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}

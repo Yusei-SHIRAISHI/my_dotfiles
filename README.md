@@ -55,7 +55,8 @@ Other SSH identities referenced from `~/.ssh/config` remain machine-local until 
 Expected setup:
 
 - Create a Bitwarden item named `ssh-github`
-- If you use Bitwarden's generated SSH key item, keep the `秘密鍵` and `公開鍵` fields on that item
+- If you use Bitwarden's generated SSH key item, `chezmoi` reads `sshKey.privateKey` and `sshKey.publicKey` from that item
+- In the Bitwarden UI, these are shown as `秘密鍵` and `公開鍵`
 - If your Bitwarden UI is in English, the fallback field names are `Private Key` and `Public Key`
 - The old attachment-based layout with `id_rsa` and `id_rsa.pub` is still supported as a fallback
 
