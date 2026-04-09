@@ -58,7 +58,6 @@ Expected setup:
 - If you use Bitwarden's generated SSH key item, `chezmoi` reads `sshKey.privateKey` and `sshKey.publicKey` from that item
 - In the Bitwarden UI, these are shown as `秘密鍵` and `公開鍵`
 - If your Bitwarden UI is in English, the fallback field names are `Private Key` and `Public Key`
-- The old attachment-based layout with `id_rsa` and `id_rsa.pub` is still supported as a fallback
 
 The generated files are:
 
@@ -72,7 +71,7 @@ The generated files are:
 
 1. Add a new `Host` entry to `home/dot_ssh/private_config`
 2. Add a new source directory under `home/dot_ssh/keys/<name>/`
-3. Create template files that fetch the private key and public key from Bitwarden fields or attachments
+3. Create template files that fetch the private key and public key from the Bitwarden item data
 4. Add the matching Bitwarden item data
 5. Run `chezmoi apply`
 
