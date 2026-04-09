@@ -1,0 +1,4 @@
+{{- $shellEnv := bitwardenFields "item" "chezmoi-shell-env" -}}
+{{- /* Generated from Bitwarden at apply time. */ -}}
+GITHUB_PAT={{ printf "%q" ((index $shellEnv "GITHUB_PAT").value) }}
+BRAVE_API_KEY={{ printf "%q" ((index $shellEnv "BRAVE_API_KEY").value) }}
