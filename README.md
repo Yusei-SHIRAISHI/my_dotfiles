@@ -48,14 +48,16 @@ chezmoi apply --source "$(pwd)" --verbose
 
 `~/.ssh/config` is managed by `chezmoi`.
 
-The GitHub SSH key is restored from Bitwarden attachments at apply time.
+The GitHub SSH key is restored from a Bitwarden item at apply time.
 
 Other SSH identities referenced from `~/.ssh/config` remain machine-local until they are migrated the same way.
 
 Expected setup:
 
 - Create a Bitwarden item named `ssh-github`
-- Add attachments named `id_rsa` and `id_rsa.pub`
+- If you use Bitwarden's generated SSH key item, keep the `秘密鍵` and `公開鍵` fields on that item
+- If your Bitwarden UI is in English, the fallback field names are `Private Key` and `Public Key`
+- The old attachment-based layout with `id_rsa` and `id_rsa.pub` is still supported as a fallback
 
 The generated files are:
 
@@ -69,8 +71,8 @@ The generated files are:
 
 1. Add a new `Host` entry to `home/dot_ssh/private_config`
 2. Add a new source directory under `home/dot_ssh/keys/<name>/`
-3. Create template files that fetch the private key and public key from Bitwarden attachments
-4. Add the matching Bitwarden item and attachments
+3. Create template files that fetch the private key and public key from Bitwarden fields or attachments
+4. Add the matching Bitwarden item data
 5. Run `chezmoi apply`
 
 ## Bootstrap on another machine
