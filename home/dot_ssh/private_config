@@ -1,0 +1,17 @@
+#
+# github
+#
+Host github.com
+User git
+Hostname ssh.github.com
+Port 443
+IdentityFile ~/.ssh/keys/github/id_rsa
+
+#
+# openclawpc
+#
+Host openclawpc
+  HostName 192.168.10.167
+  User yuseishiraishi
+  Port 22
+  IdentityFile ~/.ssh/keys/openclawpc/id_ed25519

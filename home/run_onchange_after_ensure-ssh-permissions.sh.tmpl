@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -eu
+
+for dir in "$HOME/.ssh" "$HOME/.ssh/keys" "$HOME/.ssh/keys/github"; do
+  if [ -d "$dir" ]; then
+    chmod 700 "$dir"
+  fi
+done
+
+if [ -f "$HOME/.ssh/config" ]; then
+  chmod 600 "$HOME/.ssh/config"
+fi
+
+if [ -f "$HOME/.ssh/keys/github/id_rsa" ]; then
+  chmod 600 "$HOME/.ssh/keys/github/id_rsa"
+fi
+
+if [ -f "$HOME/.ssh/keys/github/id_rsa.pub" ]; then
+  chmod 644 "$HOME/.ssh/keys/github/id_rsa.pub"
+fi
