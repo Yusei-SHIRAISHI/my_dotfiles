@@ -32,7 +32,7 @@ fi
 
 function build_prompt() {
   local exit_status_color="$1"
-  PROMPT="%K{${exit_status_color}}💩%k ${ssh_prefix}%F{cyan}${prompt_host}%f %1~\${vcs_info_msg_0_} "
+  PROMPT="%K{${exit_status_color}}💩%k <${ssh_prefix}%F{cyan}${prompt_host}%f> %1~\${vcs_info_msg_0_} "
 }
 
 function update_prompt() {
