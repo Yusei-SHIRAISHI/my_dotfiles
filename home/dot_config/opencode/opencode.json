@@ -1,0 +1,160 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-sonnet-4-5",
+  "small_model": "anthropic/claude-haiku-4-5",
+  "default_agent": "build",
+  "command": {
+    "obsidian-project-create": {
+      "description": "Create a standard Obsidian project workspace from a project slug",
+      "agent": "build",
+      "template": "{file:./commands/obsidian-project-create.md}"
+    },
+    "obsidian-project-remove": {
+      "description": "Remove an Obsidian project workspace while keeping items as source of truth",
+      "agent": "build",
+      "template": "{file:./commands/obsidian-project-remove.md}"
+    },
+    "task-breakdown": {
+      "description": "Break down work into Obsidian epic, story, and task notes",
+      "agent": "build",
+      "template": "{file:./commands/task-breakdown.md}"
+    }
+  },
+  "agent": {
+    "task_manager": {
+      "description": "Subagent that drives a single task to completion by coordinating execution agents and reviewer loops.",
+      "mode": "subagent",
+      "hidden": true,
+      "prompt": "{file:agents/task_manager.md}",
+      "permission": {
+        "read": "allow",
+        "edit": "deny",
+        "write": "deny",
+        "bash": "deny",
+        "task": {
+          "*": "deny",
+          "general": "allow",
+          "explore": "allow",
+          "docs-researcher": "allow",
+          "reviewer": "allow"
+        }
+      }
+    },
+    "general": {
+      "description": "Implementation agent that applies changes with minimal and safe diffs.",
+      "mode": "subagent",
+      "prompt": "{file:agents/general.md}",
+      "permission": {
+        "read": "allow",
+        "edit": "allow",
+        "write": "allow",
+        "bash": "allow",
+        "task": "deny"
+      }
+    },
+    "explore": {
+      "description": "Read-only investigator for codebase reconnaissance and local evidence collection.",
+      "mode": "subagent",
+      "prompt": "{file:agents/explore.md}",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "edit": "deny",
+        "write": "deny",
+        "bash": "allow",
+        "task": "deny"
+      }
+    },
+    "docs-researcher": {
+      "description": "External documentation and specification investigator.",
+      "mode": "subagent",
+      "prompt": "{file:agents/docs-researcher.md}",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "edit": "deny",
+        "write": "deny",
+        "bash": "deny",
+        "task": "deny"
+      }
+    },
+    "reviewer": {
+      "description": "Independent review specialist for required review types.",
+      "mode": "subagent",
+      "prompt": "{file:agents/reviewer.md}",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "edit": "deny",
+        "write": "deny",
+        "bash": "allow",
+        "task": "deny"
+      }
+    }
+  },
+  "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp@latest"
+      ],
+      "enabled": true,
+      "timeout": 30000
+    },
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "oauth": false,
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_PAT}"
+      },
+      "enabled": true,
+      "timeout": 30000
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "enabled": true,
+      "timeout": 30000
+    },
+    "brave-search": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@brave/brave-search-mcp-server",
+        "--transport",
+        "stdio"
+      ],
+      "environment": {
+        "BRAVE_API_KEY": "{env:BRAVE_API_KEY}"
+      },
+      "enabled": true,
+      "timeout": 30000
+    },
+    "figma": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "figma-developer-mcp",
+        "--stdio"
+      ],
+      "environment": {
+        "FIGMA_API_KEY": "{env:FIGMA_API_KEY}"
+      },
+      "enabled": true,
+      "timeout": 30000
+    }
+  },
+  "permission": {
+    "mcp_*": "ask"
+  }
+}
