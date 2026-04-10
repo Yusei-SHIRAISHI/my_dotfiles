@@ -4,22 +4,13 @@ if [[ -f "$HOME/.env" ]]; then
   set +a
 fi
 
-setopt SH_WORD_SPLIT
-
-setopt prompt_subst
-autoload -U colors; colors
+autoload -U colors
 autoload -Uz add-zsh-hook
-
-#prompt
 autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git:*' check-for-changes true
-zstyle ':vcs_info:*' formats       \
-    "[%F{green}%b%f] %m"
-zstyle ':vcs_info:*' actionformats \
-    "[%F{magenta}%b|%F{red}%a%f] %m"
-zstyle ':vcs_info:git+set-message:*' hooks \
-	git_set_status_to_misc
+
+setopt SH_WORD_SPLIT
+setopt prompt_subst
+
 function +vi-git_set_status_to_misc() {
   if [[ "$hook_com[staged]" == "S" ]] || [[ "$hook_com[unstaged]" == "U" ]]; then
     hook_com[misc]="×"
@@ -30,88 +21,129 @@ function +vi-git_set_status_to_misc() {
   else
     hook_com[misc]="○"
   fi
-	return 0
+  return 0
 }
-precmd () { vcs_info }
 
-host="$(hostname -s)"
+prompt_host="%m"
 ssh_prefix=""
 if [[ -n "$SSH_CONNECTION" ]]; then
   ssh_prefix="%F{yellow}ssh:%f "
 fi
 
-PROMPT="%K{green}💩%k ${ssh_prefix}%F{cyan}${host}%f %1~ \${vcs_info_msg_0_}"
-add-zsh-hook precmd update_prompt
-function update_prompt() {
-  if [[ $? -eq 0 ]]; then
-		exit_status_color='green'
-	else
-		exit_status_color='red'
-	fi
-  PROMPT="%K{${exit_status_color}}💩%k ${ssh_prefix}%F{cyan}${host}%f %1~\${vcs_info_msg_0_} "
+function build_prompt() {
+  local exit_status_color="$1"
+  PROMPT="%K{${exit_status_color}}💩%k ${ssh_prefix}%F{cyan}${prompt_host}%f %1~\${vcs_info_msg_0_} "
 }
 
-#completion
-autoload -U compinit && compinit
-fpath=(~/.zsh/completion $fpath)
-export LSCOLORS=exfxcxdxbxegedabagacad
-export LS_COLORS='di=36:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-zstyle ':completion:*:setopt:*' menu true select
-zstyle ':completion:*:default' list-colors di=36 ex=31 ln=35
-zstyle ':completion:*' completer _complete _approximate _correct _prefix
-zstyle ':completion:*:approximate' max-errors 2 NUMERIC
+function update_prompt() {
+  local exit_status_color='green'
+  if [[ $? -ne 0 ]]; then
+    exit_status_color='red'
+  fi
+  build_prompt "$exit_status_color"
+}
 
-#opt
-setopt auto_cd
-setopt auto_menu
-setopt list_packed
-setopt list_types
-setopt noautoremoveslash
-setopt magic_equal_subst
-setopt print_eight_bit
+setup_prompt() {
+  zstyle ':vcs_info:*' enable git
+  zstyle ':vcs_info:git:*' check-for-changes true
+  zstyle ':vcs_info:*' formats       \
+      "[%F{green}%b%f] %m"
+  zstyle ':vcs_info:*' actionformats \
+      "[%F{magenta}%b|%F{red}%a%f] %m"
+  zstyle ':vcs_info:git+set-message:*' hooks \
+      git_set_status_to_misc
 
-#export
-export LANG=ja_JP.UTF-8
-# export LC_ALL=ja_JP.UTF-8
+  precmd () { vcs_info }
+  add-zsh-hook precmd update_prompt
+  build_prompt green
+}
 
-if [[ -d "$HOME/.local/bin" ]]; then
-  export PATH="$HOME/.local/bin:$PATH"
-fi
+setup_completion() {
+  fpath=(~/.zsh/completion $fpath)
+  autoload -U compinit && compinit
 
-# Let tmux own mouse selection when running opencode inside a tmux pane.
-if [[ -n "$TMUX" ]]; then
-  export OPENCODE_DISABLE_MOUSE=true
-else
-  unset OPENCODE_DISABLE_MOUSE
-fi
+  export LSCOLORS=exfxcxdxbxegedabagacad
+  export LS_COLORS='di=36:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+  zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+  zstyle ':completion:*:setopt:*' menu true select
+  zstyle ':completion:*:default' list-colors di=36 ex=31 ln=35
+  zstyle ':completion:*' completer _complete _approximate _correct _prefix
+  zstyle ':completion:*:approximate' max-errors 2 NUMERIC
+}
 
-export EDITOR=nvim
+setup_shell_options() {
+  setopt auto_cd
+  setopt auto_menu
+  setopt list_packed
+  setopt list_types
+  setopt noautoremoveslash
+  setopt magic_equal_subst
+  setopt print_eight_bit
+}
 
+setup_environment() {
+  export LANG=ja_JP.UTF-8
+  # export LC_ALL=ja_JP.UTF-8
 
-#alias
-alias ls="ls --color=auto -F"
-alias la='ls -a'
-alias ll='ls -l -a'
-alias cl='clear'
-alias vim='nvim'
-alias obsidian-server="obsidian > /dev/null 2>&1 &"
-alias obsidian-kill="flatpak kill md.obsidian.Obsidian"
+  if [[ -d "$HOME/.local/bin" ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
+  fi
 
-if [ -f /usr/local/bin/tmux ]; then
-    alias t="tmux";
-    alias tls="tmux ls";
-fi
+  if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate zsh)"
+  fi
+
+  # Let tmux own mouse selection when running opencode inside a tmux pane.
+  if [[ -n "$TMUX" ]]; then
+    export OPENCODE_DISABLE_MOUSE=true
+  else
+    unset OPENCODE_DISABLE_MOUSE
+  fi
+
+  export EDITOR=nvim
+}
+
+setup_aliases() {
+  alias ls="ls --color=auto -F"
+  alias la='ls -a'
+  alias ll='ls -l -a'
+  alias cl='clear'
+  alias vim='nvim'
+  alias obsidian-server="obsidian > /dev/null 2>&1 &"
+  alias obsidian-kill="flatpak kill md.obsidian.Obsidian"
+
+  if tmux_path="$(command -v tmux 2>/dev/null)"; then
+    function t() {
+      "$tmux_path" "$@"
+    }
+
+    function tls() {
+      "$tmux_path" ls
+    }
+  fi
+}
 
 {{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+setup_os_specific() {
+  export GDK_SCALE=2
+  export GDK_DPI_SCALE=0.75
 
-export GDK_SCALE=2
-export GDK_DPI_SCALE=0.75
-
-function open() {
-  cmd.exe /c start "$(wslpath -w "$1")"
+  function open() {
+    cmd.exe /c start "$(wslpath -w "$1")"
+  }
+}
+{{- else }}
+setup_os_specific() {
+  :
 }
 {{- end }}
+
+setup_prompt
+setup_completion
+setup_shell_options
+setup_environment
+setup_aliases
+setup_os_specific
 
 
 #. "$HOME/.local/bin/env"
