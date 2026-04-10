@@ -20,7 +20,10 @@
 
 [core]
   editor = nvim
+	pager = delta
 [mergetool]
   prompt = false
 [merge]
   tool = vimdiff
+[interactive]
+	diffFilter = delta --color-only

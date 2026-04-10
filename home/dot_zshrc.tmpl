@@ -34,7 +34,13 @@ function +vi-git_set_status_to_misc() {
 }
 precmd () { vcs_info }
 
-PROMPT="%K{green}💩%k %F{cyan}%1~%f \${vcs_info_msg_0_}"
+host="$(hostname -s)"
+ssh_prefix=""
+if [[ -n "$SSH_CONNECTION" ]]; then
+  ssh_prefix="%F{yellow}ssh:%f "
+fi
+
+PROMPT="%K{green}💩%k ${ssh_prefix}%F{cyan}${host}%f %1~ \${vcs_info_msg_0_}"
 add-zsh-hook precmd update_prompt
 function update_prompt() {
   if [[ $? -eq 0 ]]; then
@@ -42,7 +48,7 @@ function update_prompt() {
 	else
 		exit_status_color='red'
 	fi
-  PROMPT="%K{${exit_status_color}}💩%k %F{cyan}%1~%f\${vcs_info_msg_0_} "
+  PROMPT="%K{${exit_status_color}}💩%k ${ssh_prefix}%F{cyan}${host}%f %1~\${vcs_info_msg_0_} "
 }
 
 #completion
