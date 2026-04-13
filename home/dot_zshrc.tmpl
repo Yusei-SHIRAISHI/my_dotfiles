@@ -1,9 +1,3 @@
-if [[ -f "$HOME/.env" ]]; then
-  set -a
-  . "$HOME/.env"
-  set +a
-fi
-
 autoload -U colors
 autoload -Uz add-zsh-hook
 autoload -Uz vcs_info
@@ -84,14 +78,6 @@ setup_shell_options() {
 setup_environment() {
   export LANG=ja_JP.UTF-8
   # export LC_ALL=ja_JP.UTF-8
-
-  if [[ -d "$HOME/.local/bin" ]]; then
-    export PATH="$HOME/.local/bin:$PATH"
-  fi
-
-  if command -v mise >/dev/null 2>&1; then
-    eval "$(mise activate zsh)"
-  fi
 
   # Let tmux own mouse selection when running opencode inside a tmux pane.
   if [[ -n "$TMUX" ]]; then
