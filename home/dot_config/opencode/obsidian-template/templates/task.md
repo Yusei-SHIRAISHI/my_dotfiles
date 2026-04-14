@@ -52,7 +52,7 @@ human_review_required: true
 ## References
 
 - <関連 note / task / URL / file>
-- [[../items/stories/S001-example-story]]
+- [[../stories/S001-example-story]]
 
 ## Notes
 

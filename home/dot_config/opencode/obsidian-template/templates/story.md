@@ -41,7 +41,7 @@ labels: []
 
 ## 関連 Tasks
 
-- [[../../items/tasks/T001-example-task]]
+- [[../tasks/T001-example-task]]
 
 ## Notes
 

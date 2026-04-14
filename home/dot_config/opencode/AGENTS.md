@@ -13,8 +13,9 @@
 ## Worktree Setup Rules
 
 - worktree 作成時は `using-git-worktrees` skill の手順に従う
-- project-local な worktree ディレクトリを使う場合は、作成前に ignore 設定を確認する
-- どこに worktree を作るか既存ルールが不明な場合は、勝手に決めず確認する
+- worktree の作成場所は、各リポジトリ直下の `.worktrees/` を既定とする
+- `.worktrees/` を使う前に、親リポジトリの ignore 設定に `.worktrees/` が含まれていることを確認する
+- リポジトリ固有の `AGENTS.md` に別の明示ルールがある場合のみ、その指定を優先してよい
 
 ## Execution Rules
 

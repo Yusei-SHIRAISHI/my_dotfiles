@@ -15,6 +15,7 @@
 - 無関係なリファクタリング、広範な cleanup、全面的な設計変更はしない
 - 他 agent へ委譲しない
 - 調査は実装に必要な最小範囲に留める
+- `Description` や `Scope rules` が declaration-first や skeleton-only を要求する場合は、対象言語の慣習に沿った skeleton のみを作り、business logic を実装しない
 - セキュリティ、データ整合性、migration、互換性に影響しうる変更は明示して報告する
 - 回帰リスクや未解決事項がある場合は隠さず報告する
 - 検証なしに `done` 相当の完了報告をしない

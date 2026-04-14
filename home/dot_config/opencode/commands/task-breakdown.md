@@ -14,9 +14,10 @@ skills:
 
 テンプレート:
 
-@templates/epic-note-template.md
-@templates/story-note-template.md
-@templates/task-note-template.md
+- `obsidian-template/templates/epic.md`
+- `obsidian-template/templates/story.md`
+- `obsidian-template/templates/task.md`
+- `obsidian-template/templates/task-patterns/type-function-io.md`
 
 実行契約:
 
@@ -37,6 +38,7 @@ skills:
 - note の本文と frontmatter は `obsidian-markdown` skill に従って整える
 - 詳細な task breakdown と dependency のルールは `rules/task-breakdown.md` を正本とする
 - note 本文は template に従う
+- `型・関数IO作成` task では、可能なら `obsidian-template/templates/task-patterns/type-function-io.md` を優先する
 - 対象の vault path、project、Epic / Story の切り方、または要求整理が曖昧な場合は、作成前に短い確認質問を 1 つだけ行う
 
 ## 返却内容

@@ -14,6 +14,7 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 ## Preconditions
 
 - 対象は Obsidian vault 内の note と directory とする
+- 対象 vault 名は `task-manage` を既定とする
 - path は vault root からの相対 path として扱う
 - Obsidian desktop app が起動している
 - `obsidian` CLI が PATH から実行できる
@@ -24,6 +25,7 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 - vault の read、search、create、append、property 更新は `obsidian-cli` skill に従って `obsidian` CLI を使う
 - note の本文や frontmatter の整形は `obsidian-markdown` skill に従う
 - この skill は vault layout、metadata、status semantics の正本として使う
+- vault 指定が曖昧な場合は `task-manage` を対象 vault として扱う
 
 ## Directory Layout
 

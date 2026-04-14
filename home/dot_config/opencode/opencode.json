@@ -18,6 +18,11 @@
       "description": "Break down work into Obsidian epic, story, and task notes",
       "agent": "build",
       "template": "{file:./commands/task-breakdown.md}"
+    },
+    "start-task-note": {
+      "description": "Start one executable task note via task_manager",
+      "agent": "build",
+      "template": "{file:./commands/start-task-note.md}"
     }
   },
   "agent": {
@@ -155,6 +160,14 @@
     }
   },
   "permission": {
-    "mcp_*": "ask"
+    "mcp_*": "ask",
+    "external_directory": {
+      "~/.config/opencode": "allow",
+      "~/.config/opencode/**": "allow"
+    },
+    "edit": {
+      "~/.config/opencode": "deny",
+      "~/.config/opencode/**": "deny"
+    }
   }
 }

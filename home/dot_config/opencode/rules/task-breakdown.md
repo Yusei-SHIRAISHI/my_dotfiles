@@ -68,6 +68,7 @@
 - `デザインワイヤーフレーム作成` は `デザイン要件定義` に `blocked_by`
 - `型・関数IO作成` は `ファイル・ディレクトリ構成案作成` に `blocked_by`
 - API を持つ `型・関数IO作成` や `コード実装` は `API エンドポイント設計` にも `blocked_by`
+- `型・関数IO作成` は既定で skeleton-first とし、可能なら task pattern template を使う
 - `デザイン作成` は `デザインワイヤーフレーム作成` に `blocked_by`
 - `コード実装` は `型・関数IO作成` に `blocked_by`
 - UI 変更がある `コード実装` は `デザイン作成` にも `blocked_by`

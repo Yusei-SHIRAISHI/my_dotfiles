@@ -4,6 +4,7 @@
 
 - この repository 内の `obsidian-template/` は template の配布元
 - 実運用では、これをコピーした先の Obsidian vault 側の file / directory を操作する
+- 実運用で想定する vault 名は `task-manage` とする
 - AI 側の共通運用ルールは `obsidian-task-management` skill を正本とする
 - 実運用での vault 操作は `obsidian` CLI と `obsidian-skills` を前提とする
 
@@ -31,6 +32,7 @@ obsidian-template/
         epics.md
         stories.md
   templates/
+    task-patterns/
   meta/
     phases.md
     statuses.md
@@ -50,6 +52,8 @@ obsidian-template/
 - project 固有の labels は `projects/<project-slug>/meta/labels.md`
 - view template は `templates/view-*.md`
 - labels template は `templates/labels.md`
+- task template は `templates/task.md` を基本とし、必要なら `templates/task-patterns/` 配下の pattern template を使う
+- pattern template の一覧と用途は `templates/task-patterns/README.md` を参照する
 - task の完了状態の正本は task note の checkbox
 - task の未完了状態分類は task note の `workflow_state`
 
