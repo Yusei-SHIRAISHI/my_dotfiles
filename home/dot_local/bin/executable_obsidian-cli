@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+appimage_path="${OBSIDIAN_APPIMAGE_PATH:-$HOME/.local/lib/obsidian/Obsidian.AppImage}"
+cache_root="${XDG_CACHE_HOME:-$HOME/.cache}/obsidian-cli"
+extract_dir="$cache_root/squashfs-root"
+cli_path="$extract_dir/obsidian-cli"
+
+if [[ ! -f "$appimage_path" ]]; then
+  printf 'Obsidian AppImage not found: %s\n' "$appimage_path" >&2
+  exit 1
+fi
+
+if [[ ! -x "$cli_path" || "$appimage_path" -nt "$cli_path" ]]; then
+  tmp_dir="$cache_root.tmp"
+  rm -rf "$tmp_dir"
+  mkdir -p "$tmp_dir"
+  (
+    cd "$tmp_dir"
+    "$appimage_path" --appimage-extract >/dev/null
+  )
+  rm -rf "$cache_root"
+  mv "$tmp_dir" "$cache_root"
+fi
+
+exec "$cli_path" "$@"
