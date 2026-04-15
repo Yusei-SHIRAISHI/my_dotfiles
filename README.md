@@ -21,7 +21,7 @@ Examples:
 This is equivalent to:
 
 ```sh
-chezmoi apply --source "$(pwd)" --verbose
+chezmoi apply --init --source "$(pwd)" --verbose
 ```
 
 ## Bitwarden-backed .env
@@ -31,7 +31,7 @@ chezmoi apply --source "$(pwd)" --verbose
 Expected setup:
 
 - Install the Bitwarden CLI: `bw`
-- Log in and unlock it before running `chezmoi apply`
+- Log in to Bitwarden before running `chezmoi apply`
 - Create a Bitwarden item named `chezmoi-shell-env`
 - Add custom fields named `GITHUB_PAT` and `BRAVE_API_KEY`
 
@@ -39,10 +39,12 @@ Common bootstrap flow:
 
 ```sh
 bw login
-export BW_SESSION="$(bw unlock --raw)"
-bw sync
-chezmoi apply --source "$(pwd)" --verbose
+chezmoi apply --init --source "$(pwd)" --verbose
 ```
+
+If `BW_SESSION` is not already set, chezmoi automatically runs `bw unlock --raw`
+via `.chezmoi.toml.tmpl`, prompts for your master password, and continues the
+apply.
 
 ## SSH config and keys
 
@@ -82,7 +84,8 @@ Install `chezmoi`, initialize from this repository, log in to Bitwarden, then ap
 ```sh
 chezmoi init <repo-url>
 bw login
-export BW_SESSION="$(bw unlock --raw)"
-bw sync
-chezmoi apply
+chezmoi apply --init
 ```
+
+`--init` regenerates the chezmoi config from `.chezmoi.toml.tmpl`, which enables
+Bitwarden auto-unlock for the apply.
