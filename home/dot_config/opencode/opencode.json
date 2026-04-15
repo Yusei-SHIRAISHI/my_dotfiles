@@ -23,6 +23,11 @@
       "description": "Start one executable task note via task_manager",
       "agent": "build",
       "template": "{file:./commands/start-task-note.md}"
+    },
+    "close-task-note": {
+      "description": "Manually close one task note after human review completion",
+      "agent": "build",
+      "template": "{file:./commands/close-task-note.md}"
     }
   },
   "agent": {

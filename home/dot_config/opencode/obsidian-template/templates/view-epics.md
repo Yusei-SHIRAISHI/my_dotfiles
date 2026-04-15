@@ -3,19 +3,19 @@
 ## Active
 
 ```dataview
-TABLE id, status
+LIST
 FROM "items/epics"
 WHERE project = "<project-slug>"
   AND status = "active"
-SORT id ASC
+SORT file.name ASC
 ```
 
 ## On Hold
 
 ```dataview
-TABLE id, status
+LIST
 FROM "items/epics"
 WHERE project = "<project-slug>"
   AND status = "on_hold"
-SORT id ASC
+SORT file.name ASC
 ```

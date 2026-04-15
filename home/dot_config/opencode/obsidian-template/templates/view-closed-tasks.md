@@ -3,9 +3,10 @@
 ## Done
 
 ```dataview
-TASK
+LIST
 FROM "items/tasks"
-WHERE completed
+WHERE length(file.tasks) > 0
+  AND file.tasks[0].completed
   AND project = "<project-slug>"
 SORT file.name ASC
 ```
@@ -13,9 +14,10 @@ SORT file.name ASC
 ## Cancelled
 
 ```dataview
-TASK
+LIST
 FROM "items/tasks"
-WHERE status = "-"
+WHERE length(file.tasks) > 0
+  AND file.tasks[0].status = "-"
   AND project = "<project-slug>"
 SORT file.name ASC
 ```

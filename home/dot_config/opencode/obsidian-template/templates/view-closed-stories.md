@@ -3,19 +3,19 @@
 ## Done
 
 ```dataview
-TABLE id, epic, phase, status
+LIST
 FROM "items/stories"
 WHERE project = "<project-slug>"
   AND status = "done"
-SORT id ASC
+SORT file.name ASC
 ```
 
 ## Cancelled
 
 ```dataview
-TABLE id, epic, phase, status
+LIST
 FROM "items/stories"
 WHERE project = "<project-slug>"
   AND status = "cancelled"
-SORT id ASC
+SORT file.name ASC
 ```

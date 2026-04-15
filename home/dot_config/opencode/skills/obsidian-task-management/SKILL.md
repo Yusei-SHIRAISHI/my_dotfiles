@@ -1,13 +1,13 @@
 ---
 name: obsidian-task-management
-description: Common workflow for managing Obsidian Epic, Story, and task notes with Obsidian Tasks and Dataview. Use this whenever the user asks to create or update an Obsidian task-management vault, organize items/epics/items/stories/items/tasks, maintain projects/<slug>/views or closed-views, set workflow_state or blocked_by, or manage Epic/Story/task frontmatter. Also trigger on Japanese requests mentioning Obsidian, タスク管理, Epic, Story, task note, workflow_state, blocked_by, views, closed-views, frontmatter, Dataview, or Obsidian Tasks.
+description: Common workflow for managing Obsidian Epic, Story, and task notes with Dataview. Use this whenever the user asks to create or update an Obsidian task-management vault, organize items/epics/items/stories/items/tasks, maintain projects/<slug>/views or closed-views, set workflow_state or blocked_by, or manage Epic/Story/task frontmatter. Also trigger on Japanese requests mentioning Obsidian, タスク管理, Epic, Story, task note, workflow_state, blocked_by, views, closed-views, frontmatter, Dataview, or task state management.
 ---
 
 # Obsidian Task Management
 
 ## Purpose
 
-- 人間は Obsidian Tasks と Dataview で一覧・更新する
+- 人間は Dataview と frontmatter 更新で一覧・管理する
 - AI は `obsidian-cli` と Markdown 編集で task 管理を保守する
 - AI 管理の task 情報は vault 内の決まったディレクトリ構造に集約する
 
@@ -35,8 +35,8 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 - `projects/<project-slug>/overview.md`: project overview note
 - `projects/<project-slug>/knowledge/`: project 固有の知識メモ
 - `projects/<project-slug>/meta/labels.md`: project 固有 label の辞書
-- `projects/<project-slug>/views/`: 進行中の Tasks query や Dataview note
-- `projects/<project-slug>/closed-views/`: 完了・中止済みの Tasks query や Dataview note
+- `projects/<project-slug>/views/`: 進行中の Dataview note
+- `projects/<project-slug>/closed-views/`: 完了・中止済みの Dataview note
 - `templates/`: Obsidian 側で使う note template
 - `meta/`: phases、workflow、statuses などの共通辞書
 
@@ -65,9 +65,8 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 - project 全体の概要は `projects/<project-slug>/overview.md` に置く
 - project 固有の長期的な知識メモは `projects/<project-slug>/knowledge/` に置く
 - Epic と Story の lifecycle status は各 note の frontmatter `status` を正本とする
-- view は metadata、`workflow_state`、checkbox から再構築できる一覧であり、正本にしない
-- task の完了状態は task note 内の Obsidian Tasks checkbox を正本とする
-- task の未完了状態分類は task note の `workflow_state` を正本とする
+- view は metadata と `workflow_state` から再構築できる一覧であり、正本にしない
+- task の状態正本は task note の `workflow_state` とする
 
 ## Frontmatter Rules
 
@@ -82,13 +81,12 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 - Story note は少なくとも `type: story`、`id`、`project`、`status` を持ち、必要なら `epic` を持つ
 - Task note は少なくとも `type: task`、`id`、`project`、`workflow_state` を持ち、必要なら `story`、`epic`、`blocked_by`、`labels` を持つ
 - Epic / Story の `status` は `active`、`on_hold`、`done`、`cancelled` を使う
-- `workflow_state` は `icebox`、`backlog`、`in_progress`、`human_review`、`pending` を使う
-- `workflow_state` は未完了 task の状態分類を表し、完了状態は表さない
+- `workflow_state` は `icebox`、`backlog`、`in_progress`、`human_review`、`pending`、`done`、`cancelled` を使う
 - `labels` は `projects/<project-slug>/meta/labels.md` で project ごとに定義してよい
 
 ## View Semantics
 
-- `projects/<project-slug>/views/tasks.md` では `workflow_state` ごとに未完了 task を分類する
+- `projects/<project-slug>/views/tasks.md` では `workflow_state` ごとに task を分類する
 - `projects/<project-slug>/views/epics.md` では `active` と `on_hold` を分類する
 - `projects/<project-slug>/views/stories.md` では `active` と `on_hold` を分類する
 - `projects/<project-slug>/closed-views/tasks.md` では `Done` と `Cancelled` を表示する
@@ -97,13 +95,10 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 
 ## Status Rules
 
-- `- [ ]` を未着手に使う
-- `- [/]` を着手中に使う
-- `- [x]` を完了に使う
-- `- [-]` を不要化または cancelled に使う
 - task note に別の status field を重複して持たせない
-- `done` と `cancelled` は `workflow_state` に持たせない
-- cancelled task は `- [-]` を正本とし、標準の state view からは通常除外してよい
+- task の状態は `workflow_state` だけで表す
+- task title 行は plain text で置き、先頭 checkbox を task 状態に使わない
+- note 本文内の checklist は補助メモとして使ってよいが、task 状態の正本にしない
 
 ## Working Style
 
