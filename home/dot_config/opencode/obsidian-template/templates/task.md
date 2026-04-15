@@ -37,6 +37,13 @@ human_review_required: true
 
 <true | false>
 
+## Git Context
+
+- <code changes がある場合だけ記載。不要なら section ごと削除してよい>
+- Repository: <repo-path-or-name>
+- Branch: <branch-name | TBD>
+- Worktree: <worktree-path | TBD>
+
 ## Scope rules
 
 - <やってよいこと>
@@ -53,6 +60,15 @@ human_review_required: true
 
 - <関連 note / task / URL / file>
 - [[../stories/S001-example-story]]
+
+## Results
+
+- <作業後に追記。未実行なら空でもよい>
+- Commits:
+  - <abc1234 short message>
+- Verification: <not run | passed | failed>
+- Notes:
+  - <補足>
 
 ## Notes
 

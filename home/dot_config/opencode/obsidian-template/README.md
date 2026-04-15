@@ -6,7 +6,7 @@
 - 実運用では、これをコピーした先の Obsidian vault 側の file / directory を操作する
 - 実運用で想定する vault 名は `task-manage` とする
 - AI 側の共通運用ルールは `obsidian-task-management` skill を正本とする
-- 実運用での vault 操作は `obsidian` CLI と `obsidian-skills` を前提とする
+- 実運用での vault 操作は `obsidian-cli` と `obsidian-skills` を前提とする
 
 ## Directory Layout
 

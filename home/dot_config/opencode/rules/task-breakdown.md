@@ -61,6 +61,7 @@
 - 依存がある場合は task note 本文にも `Relations` として書く
 - 真に必要な依存だけ張り、不要な直列化を避ける
 - `blocked_by` が空の sibling task は並列候補として扱う
+- 依存先 task が完了した後も、`blocked_by` は履歴と依存メタデータとして残してよい
 
 ## Default Dependency Hints
 

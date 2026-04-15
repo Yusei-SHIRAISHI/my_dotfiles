@@ -43,9 +43,10 @@
 
 この場合のルール:
 
-- `blocked_by` が空の task ごとに `Task Manager` を 1 つ起動する
+- `blocked_by` が空、または依存先 task がすべて完了済みの task ごとに `Task Manager` を 1 つ起動する
 - sibling task は可能なら並列に進める
-- `blocked_by` がある task は依存解消まで起動しない
+- `blocked_by` がある task は、依存先 task がすべて完了するまで起動しない
+- 依存先 task が完了した後も、`blocked_by` 自体は依存メタデータとして残してよい
 - 1 つの `Task Manager` に複数 task の進行管理をさせない
 - Epic や Story は実行単位ではなく、task note を実行単位とする
 - 各 `Task Manager` は自分に割り当てられた 1 task の中でのみ `general`、`reviewer` を使う

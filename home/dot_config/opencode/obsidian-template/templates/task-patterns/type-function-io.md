@@ -42,6 +42,13 @@ human_review_required: true
 
 true
 
+## Git Context
+
+- <code changes がある場合だけ記載。不要なら section ごと削除してよい>
+- Repository: <repo-path-or-name>
+- Branch: <branch-name | TBD>
+- Worktree: <worktree-path | TBD>
+
 ## Scope rules
 
 - 型、関数IO、interface / trait / protocol、エラー契約の定義は行ってよい
@@ -61,6 +68,15 @@ true
 
 - <関連 Story / API 設計 / 既存 module>
 - [[../stories/S001-example-story]]
+
+## Results
+
+- <作業後に追記。未実行なら空でもよい>
+- Commits:
+  - <abc1234 short message>
+- Verification: <not run | passed | failed>
+- Notes:
+  - <補足>
 
 ## Notes
 

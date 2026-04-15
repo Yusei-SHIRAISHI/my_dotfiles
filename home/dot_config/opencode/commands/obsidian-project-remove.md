@@ -4,7 +4,7 @@ Obsidian CLI を使って、指定された `<project-slug>` の project workspa
 
 - `obsidian-task-management` skill
 - `obsidian-cli` skill
-- `obsidian-template/PROJECT_OPERATIONS.md`
+- `~/.config/opencode/obsidian-template/PROJECT_OPERATIONS.md`
 
 ## この command の役割
 
@@ -25,7 +25,7 @@ Obsidian CLI を使って、指定された `<project-slug>` の project workspa
 
 - 引数は `<project-slug>` だけを必須とする
 - slug が曖昧な場合だけ短い確認質問を 1 つ行う
-- vault への操作は `obsidian` CLI 経由で行う
+- vault への操作は `obsidian-cli` 経由で行う
 - 削除前に `project: <project-slug>` の task の存在を確認し、未完了 task があれば報告する
 - それでもデフォルト動作は workspace-only とし、`items/epics/`、`items/stories/`、`items/tasks/` は削除しない
 - `items/` 配下の purge は、この command では行わない

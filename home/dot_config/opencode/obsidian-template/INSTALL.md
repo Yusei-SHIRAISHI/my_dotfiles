@@ -9,7 +9,7 @@
 
 - Obsidian desktop app をインストールし、対象 vault を開ける状態にする
 - 対象 vault 名は `task-manage` とする
-- `obsidian` CLI が PATH から実行できるようにする
+- `obsidian-cli` が PATH から実行できるようにする
 - OpenCode 側には `obsidian-cli` と `obsidian-markdown` skill を `~/.config/opencode/skills/` 配下に配置する
 
 ## 1. テンプレートを vault にコピーする
@@ -29,8 +29,8 @@
 
 - `kepano/obsidian-skills` を参照し、必要な `SKILL.md` を `~/.config/opencode/skills/<name>/SKILL.md` に配置する
 - OpenCode を再起動して skill を再読込する
-- `which obsidian` を実行して CLI の場所を確認する
-- Obsidian app を起動した状態で `obsidian help` を実行する
+- `which obsidian-cli` を実行して CLI の場所を確認する
+- Obsidian app を起動した状態で `obsidian-cli help` を実行する
 - AI 側の共通運用ルールは `obsidian-task-management` skill を使う
 
 ## 4. 初期 note を整える

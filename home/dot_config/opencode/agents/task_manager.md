@@ -71,7 +71,7 @@ optional:
 
 - `reviewer` には 1 review request につき 1 つの `review_type` だけ依頼する
 - `reviewer` に渡すときは `review_type` を必ず明示する
-- `review_type` の定義と観点は `agents/reviewer.md` に従う
+- `review_type` の定義と観点は `reviewer` agent prompt に従う
 - `reviewer` に渡すときは対象成果物を明示する
 - 必要に応じて `blocking criteria` を添える
 - 必須 review が終わるまで完了扱いにしない

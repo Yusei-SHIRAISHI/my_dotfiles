@@ -5,19 +5,19 @@ Obsidian CLI を使って、指定された `<project-slug>` の project workspa
 - `obsidian-task-management` skill
 - `obsidian-cli` skill
 - `obsidian-markdown` skill
-- `obsidian-template/PROJECT_OPERATIONS.md`
+- `~/.config/opencode/obsidian-template/PROJECT_OPERATIONS.md`
 
 テンプレート:
 
-- `obsidian-template/templates/project.md`
-- `obsidian-template/templates/knowledge.md`
-- `obsidian-template/templates/labels.md`
-- `obsidian-template/templates/view-tasks.md`
-- `obsidian-template/templates/view-epics.md`
-- `obsidian-template/templates/view-stories.md`
-- `obsidian-template/templates/view-closed-tasks.md`
-- `obsidian-template/templates/view-closed-epics.md`
-- `obsidian-template/templates/view-closed-stories.md`
+- `~/.config/opencode/obsidian-template/templates/project.md`
+- `~/.config/opencode/obsidian-template/templates/knowledge.md`
+- `~/.config/opencode/obsidian-template/templates/labels.md`
+- `~/.config/opencode/obsidian-template/templates/view-tasks.md`
+- `~/.config/opencode/obsidian-template/templates/view-epics.md`
+- `~/.config/opencode/obsidian-template/templates/view-stories.md`
+- `~/.config/opencode/obsidian-template/templates/view-closed-tasks.md`
+- `~/.config/opencode/obsidian-template/templates/view-closed-epics.md`
+- `~/.config/opencode/obsidian-template/templates/view-closed-stories.md`
 
 ## この command の役割
 
@@ -42,7 +42,7 @@ Obsidian CLI を使って、指定された `<project-slug>` の project workspa
 
 - 引数は `<project-slug>` だけを必須とする
 - slug が曖昧な場合だけ短い確認質問を 1 つ行う
-- vault への操作は `obsidian` CLI 経由で行う
+- vault への操作は `obsidian-cli` 経由で行う
 - すでに対象 path が存在する場合は、無条件に上書きせず現状を読んで不足分だけ補う
 - `overview.md` では `id: my-project` と `# my-project` を `<project-slug>` に置き換える
 - `views/*.md` と `closed-views/*.md` では query 内の `<project-slug>` を実際の slug に置き換える

@@ -8,7 +8,7 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 ## Purpose
 
 - 人間は Obsidian Tasks と Dataview で一覧・更新する
-- AI は `obsidian` CLI と Markdown 編集で task 管理を保守する
+- AI は `obsidian-cli` と Markdown 編集で task 管理を保守する
 - AI 管理の task 情報は vault 内の決まったディレクトリ構造に集約する
 
 ## Preconditions
@@ -17,12 +17,12 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 - 対象 vault 名は `task-manage` を既定とする
 - path は vault root からの相対 path として扱う
 - Obsidian desktop app が起動している
-- `obsidian` CLI が PATH から実行できる
+- `obsidian-cli` が PATH から実行できる
 - OpenCode 側で `obsidian-cli` と `obsidian-markdown` skill を利用できる
 
 ## Tooling
 
-- vault の read、search、create、append、property 更新は `obsidian-cli` skill に従って `obsidian` CLI を使う
+- vault の read、search、create、append、property 更新は `obsidian-cli` skill に従って `obsidian-cli` を使う
 - note の本文や frontmatter の整形は `obsidian-markdown` skill に従う
 - この skill は vault layout、metadata、status semantics の正本として使う
 - vault 指定が曖昧な場合は `task-manage` を対象 vault として扱う

@@ -2,102 +2,73 @@
 
 ## 参照
 
-ルール:
+- `obsidian-task-management` skill
+- `obsidian-cli` skill
+- `~/.config/opencode/obsidian-template/templates/task.md`
+- `~/.config/opencode/agents/task_manager.md`
 
-- @rules/development-flow.md
-- @rules/execution-routing.md
+## 役割
 
-skills:
+- 引数は `task note path` 1 件だけ受け付ける
+- vault 上の note は `obsidian-cli` で読む
+- 実行単位は task note 1 件だけとし、複数 task をまとめて開始しない
+- task pattern template を使った note でも、共通 task 契約を満たせば受け付ける
 
-- `obsidian-task-management`
-- `obsidian-cli`
+## 抽出する項目
 
-実行契約:
+- `Task`
+- `Overview`
+- `Description`
+- `Success criteria`
+- `Expected output`
+- `Human review required`
+- section があれば `Scope rules`、`Relations`、`References`
+- `References` には元の `task note path` も含める
 
-- @agents/task_manager.md
-- `obsidian-template/templates/task.md`
+## 開始条件
 
-## この command の役割
+- 必須 section または frontmatter が不足していたら停止する
+- `workflow_state: in_progress` なら停止する
+- task checkbox が `- [/]`、`- [x]`、`- [-]` なら停止する
+- `blocked_by` が空なら依存なしとして扱う
+- `blocked_by` がある場合は依存 task note を解決し、checkbox がすべて `- [x]` の場合だけ開始する
+- `blocked_by` に未完了、着手中、中止、または参照解決不能の task が 1 件でもあれば停止する
+- `blocked_by` は依存メタデータなので、値が残っていること自体は停止理由にしない
+- 依存 task 完了後も `blocked_by` を空にする必要はない
+- ユーザーに `blocked_by` を空にしてから再実行するよう案内してはならない
 
-- 引数として受け取った `task note path` の task note を 1 件だけ扱う
-- task note から `task_manager` の必須入力を抽出する
-- 実行可能な task であれば、その 1 task だけを `task_manager` に渡す
-- 開始時と返却時に、task note の checkbox と `workflow_state` を一貫したルールで更新する
-- 実行不能な task であれば、不足項目または未解決依存を明示して停止する
+## 状態遷移
 
-## 実行ルール
-
-- 引数は `task note path` だけを受け付ける
-- path は 1 件だけ扱い、複数 task をまとめて開始しない
-- vault 上の note の読み取りは `obsidian-task-management` と `obsidian-cli` の流儀に従い、`obsidian` CLI 経由で行う
-- `task note path` は vault root からの相対 path として扱う
-- まず対象 note を `obsidian` CLI で読み、`obsidian-template/templates/task.md` の共通契約を基準に内容を抽出する
-- task pattern template を使った note でも、共通契約の section と frontmatter が満たされていれば受け付ける
-- 少なくとも次を抽出する:
-  - `Task`
-  - `Overview`
-  - `Description`
-  - `Success criteria`
-  - `Expected output`
-  - `Human review required`
-- `blocked_by` が空でない場合は開始せず、依存未解決として停止する
-- `workflow_state` が `in_progress` の場合は開始せず、すでに着手中として停止する
-- task checkbox が `- [/]`、`- [x]`、または `- [-]` の場合は開始せず、その状態を報告して停止する
-- 必須項目が不足している場合は、足りない項目を列挙して停止する
-- 対象が executable な task note なら、routing の再判断で迂回せず `task_manager` を起動する
-- `task_manager` には対象 task を進めるのに必要な context だけを渡す
-- 1 回の実行で起動する `task_manager` は 1 つだけとする
-
-## task_manager への入力
-
-- task note から抽出した必須項目をそのまま渡す
-- section が存在する場合だけ次も渡す:
-  - `Scope rules`
-  - `Relations`
-  - `References`
-- note path を `References` に含め、元 task note を特定できるようにする
-
-## Task Note Status Transition Rules
-
-- 開始前の検証で停止した場合は、task note の checkbox と `workflow_state` を変更しない
-- 実行開始直前に、task の checkbox を `- [/]` に更新し、`workflow_state` を `in_progress` に更新する
-- `task_manager` の返却が `continue` の場合は、task を継続中として扱い、checkbox は `- [/]` のままにする
-- `continue` で外部入力待ち、依存解消待ち、または再実行待ちが明確な場合は、`workflow_state` を `pending` に更新する
-- `continue` で継続実装または継続調査が必要な場合は、`workflow_state` を `in_progress` のままにする
-- `ready_for_human_review` の場合は、checkbox は `- [/]` のままにし、`workflow_state` を `human_review` に更新する
-- `blocked` が開始後に返った場合は、checkbox は `- [/]` のままにし、`workflow_state` を `pending` に更新する
-- `done` の場合は、task の checkbox を `- [x]` に更新する
-- `done` や `cancelled` は `workflow_state` に持たせない
-- この command は task を自動で `- [-]` にしない。不要化や中止は人間の明示判断がある場合だけ行う
-- 状態更新時は、必要なら `Notes` に判断理由、待ち要因、human review 引き継ぎ事項を追記する
+- 開始前に停止した場合は checkbox と `workflow_state` を変更しない
+- 開始直前に checkbox を `- [/]`、`workflow_state` を `in_progress` に更新する
+- `task_manager` の返却が `continue` なら checkbox は `- [/]` のままにする
+- `continue` で待ち状態が明確なら `workflow_state` を `pending` にする
+- `continue` で継続実装または継続調査なら `workflow_state` は `in_progress` のままにする
+- `ready_for_human_review` なら checkbox は `- [/]` のまま、`workflow_state` を `human_review` にする
+- 開始後の `blocked` は checkbox を `- [/]` のまま、`workflow_state` を `pending` にする
+- `done` なら checkbox を `- [x]` にする
+- `done` と `cancelled` は `workflow_state` に持たせない
+- この command は task を自動で `- [-]` にしない
+- 必要なら `Notes` に待ち要因や引き継ぎ事項を追記する
 
 ## 実行フロー
 
-1. `obsidian` CLI で対象 task note を読む
-2. 必須項目、`blocked_by`、checkbox、`workflow_state` を検証する
-3. 開始不能なら状態を変えずに停止理由を返す
-4. 開始可能なら checkbox を `- [/]`、`workflow_state` を `in_progress` に更新する
-5. 抽出した context を使って `task_manager` を 1 回起動する
-6. `task_manager` の `Final recommendation` に応じて task note の状態を更新する
-7. 必要なら `Notes` や `References` に引き継ぎ情報を追記する
-8. 更新後の状態と `task_manager` の結果を返す
-
-## 停止条件
-
-- `task note path` が存在しない
-- task note ではない、または共通 task 契約を満たす note として読めない
-- 必須 section または frontmatter が不足している
-- `blocked_by` に未解決依存がある
-- `workflow_state` が `in_progress` である
-- task checkbox が `- [/]`、`- [x]`、または `- [-]` である
+1. `obsidian-cli` で対象 task note を読む。
+2. 必須項目、checkbox、`workflow_state`、`blocked_by` を検証する。
+3. `blocked_by` がある場合は依存 task note を読み、すべて `- [x]` か確認する。
+4. 開始不能なら状態を変えずに停止理由を返す。
+5. 開始可能なら checkbox を `- [/]`、`workflow_state` を `in_progress` に更新する。
+6. 抽出した context を使って `task_manager` を 1 回だけ起動する。
+7. `Final recommendation` に応じて task note の状態を更新する。
+8. 更新後の状態と必要最小限の結果を返す。
 
 ## 返却内容
 
-- 読み込んだ task note path
-- 抽出した task 要約
-- 開始可否の判定理由
-- `task_manager` を起動した場合は、その結果全文
-- 起動しなかった場合は、不足項目または依存未解決の内容
+- 起動した場合は、不要な中間判定を並べず `task_manager` の結果全文を返す
+- 起動した場合にコミットが作成されたなら、そのコミットを作成したブランチ名を返す
+- 起動したがコミットがない場合は、ブランチ名は省略してよい
+- 起動しなかった場合は、停止理由を主として返す
+- 起動しなかった場合は、依存未解決、不足項目、着手済み、完了済みなどの内訳を理由として含めてよい
 
 ## ユーザー依頼
 
