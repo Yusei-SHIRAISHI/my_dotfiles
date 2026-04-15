@@ -9,4 +9,4 @@ if ! command -v chezmoi >/dev/null 2>&1; then
   exit 1
 fi
 
-exec chezmoi apply --source "$current_dir" --verbose
+exec chezmoi apply --init --source "$current_dir" --verbose
