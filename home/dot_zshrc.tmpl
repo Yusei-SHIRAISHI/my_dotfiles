@@ -95,7 +95,7 @@ setup_aliases() {
   alias ll='ls -l -a'
   alias cl='clear'
   alias vim='nvim'
-  alias obsidian-server="obsidian > /dev/null 2>&1 &"
+  alias obsidian-server="obsidian-appimage --disable-gpu-sandbox --disable-gpu-compositing --use-gl=swiftshader > /dev/null 2>&1 &"
   alias obsidian-kill="flatpak kill md.obsidian.Obsidian"
 
   if tmux_path="$(command -v tmux 2>/dev/null)"; then
@@ -133,3 +133,6 @@ setup_os_specific
 
 
 #. "$HOME/.local/bin/env"
+
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
