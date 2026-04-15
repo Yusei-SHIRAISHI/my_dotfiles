@@ -96,7 +96,7 @@ setup_aliases() {
   alias cl='clear'
   alias vim='nvim'
   alias obsidian-server="obsidian-appimage --disable-gpu-sandbox --disable-gpu-compositing --use-gl=swiftshader > /dev/null 2>&1 &"
-  alias obsidian-kill="flatpak kill md.obsidian.Obsidian"
+  alias obsidian-kill="pkill -f 'obsidian-appimage/squashfs-root/obsidian'"
 
   if tmux_path="$(command -v tmux 2>/dev/null)"; then
     function t() {
