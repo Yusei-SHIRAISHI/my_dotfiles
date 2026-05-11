@@ -52,7 +52,7 @@
 
 ## 6. 人間の運用
 
-- task の進行状態は checkbox で更新する
+- task の状態は `workflow_state` で更新する
 - 補足メモや判断理由は note 本文に追記する
 - `projects/<project-slug>/views/` を進行中の主画面として使う
 - `projects/<project-slug>/closed-views/` を完了・中止済みの確認に使う

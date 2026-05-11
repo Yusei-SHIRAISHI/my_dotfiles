@@ -20,6 +20,16 @@ WHERE project = "<project-slug>"
 SORT file.name ASC
 ```
 
+## Rework
+
+```dataview
+LIST
+FROM "items/tasks"
+WHERE project = "<project-slug>"
+  AND workflow_state = "rework"
+SORT file.name ASC
+```
+
 ## In Progress
 
 ```dataview

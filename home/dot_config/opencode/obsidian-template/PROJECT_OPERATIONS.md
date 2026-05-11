@@ -68,7 +68,7 @@
 - `items/epics/` と `items/stories/` に必要な note を作る
 - `items/tasks/` に task note を作る
 - task note では `project: <project-slug>` を必ず設定する
-- 未完了 task の状態分類は `workflow_state` で管理する
+- task の状態は `workflow_state` で管理する
 
 ## project 削除
 
@@ -80,8 +80,8 @@ project 削除は 2 段階で考える。
 ### 1. 対象 project の task を整理する
 
 - `project: <project-slug>` の task を確認する
-- 未完了 task は完了するか `- [-]` にして cancelled にする
-- `- [/]` または `- [x]` の task は原則として履歴として残す
+- 未完了 task は完了するか `workflow_state: cancelled` にして整理する
+- `workflow_state: done` または `workflow_state: cancelled` の task は原則として履歴として残す
 
 ### 2. project workspace を削除する
 

@@ -5,9 +5,8 @@
 ```dataview
 LIST
 FROM "items/tasks"
-WHERE length(file.tasks) > 0
-  AND file.tasks[0].completed
-  AND project = "<project-slug>"
+WHERE project = "<project-slug>"
+  AND workflow_state = "done"
 SORT file.name ASC
 ```
 
@@ -16,8 +15,7 @@ SORT file.name ASC
 ```dataview
 LIST
 FROM "items/tasks"
-WHERE length(file.tasks) > 0
-  AND file.tasks[0].status = "-"
-  AND project = "<project-slug>"
+WHERE project = "<project-slug>"
+  AND workflow_state = "cancelled"
 SORT file.name ASC
 ```

@@ -54,8 +54,7 @@ obsidian-template/
 - labels template は `templates/labels.md`
 - task template は `templates/task.md` を基本とし、必要なら `templates/task-patterns/` 配下の pattern template を使う
 - pattern template の一覧と用途は `templates/task-patterns/README.md` を参照する
-- task の完了状態の正本は task note の checkbox
-- task の未完了状態分類は task note の `workflow_state`
+- task の状態正本は task note の `workflow_state`
 
 ## Next Step
 

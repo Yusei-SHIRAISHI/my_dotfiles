@@ -6,7 +6,7 @@ status: active
 labels: []
 ---
 
-# E001 <Epic title>
+# E001 <Epic名>
 
 ## ゴール
 
@@ -27,6 +27,12 @@ labels: []
 ## 関連 Stories
 
 - [[../stories/S001-example-story]]
+
+## 完了確認
+
+- <ゴール達成の根拠>
+- <スコープを満たしている根拠>
+- <未解決事項があれば明記>
 
 ## Notes
 

@@ -8,7 +8,7 @@ status: active
 labels: []
 ---
 
-# S001 <Story title>
+# S001 <Story名>
 
 ## ゴール
 
@@ -42,6 +42,12 @@ labels: []
 ## 関連 Tasks
 
 - [[../tasks/T001-example-task]]
+
+## 完了確認
+
+- <ゴール達成の根拠>
+- <完了イメージを満たしている根拠>
+- <未解決事項があれば明記>
 
 ## Notes
 

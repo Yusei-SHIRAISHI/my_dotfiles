@@ -13,4 +13,4 @@ Epic と Story の lifecycle status を定義する。
 
 - `project` には `status` を持たせない
 - 標準の `epics.md` と `stories.md` は `done` / `cancelled` を除外してよい
-- `task` には `status` を持たせず、checkbox と `workflow_state` を使う
+- `task` には `status` を持たせず、`workflow_state` を使う

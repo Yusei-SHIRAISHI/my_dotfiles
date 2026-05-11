@@ -81,7 +81,7 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 - Story note は少なくとも `type: story`、`id`、`project`、`status` を持ち、必要なら `epic` を持つ
 - Task note は少なくとも `type: task`、`id`、`project`、`workflow_state` を持ち、必要なら `story`、`epic`、`blocked_by`、`labels` を持つ
 - Epic / Story の `status` は `active`、`on_hold`、`done`、`cancelled` を使う
-- `workflow_state` は `icebox`、`backlog`、`in_progress`、`human_review`、`pending`、`done`、`cancelled` を使う
+- `workflow_state` は `icebox`、`backlog`、`rework`、`in_progress`、`human_review`、`pending`、`done`、`cancelled` を使う
 - `labels` は `projects/<project-slug>/meta/labels.md` で project ごとに定義してよい
 
 ## View Semantics
@@ -97,6 +97,7 @@ description: Common workflow for managing Obsidian Epic, Story, and task notes w
 
 - task note に別の status field を重複して持たせない
 - task の状態は `workflow_state` だけで表す
+- `rework` は human review feedback 後に同一 task 内で再作業可能な状態を表す
 - task title 行は plain text で置き、先頭 checkbox を task 状態に使わない
 - note 本文内の checklist は補助メモとして使ってよいが、task 状態の正本にしない
 

@@ -53,6 +53,8 @@ task_manager 契約の要点:
 - note の本文と frontmatter は `obsidian-markdown` skill に従って整える
 - 詳細な task breakdown と dependency のルールは `~/.config/opencode/rules/task-breakdown.md` を正本とする
 - note 本文は template に従う
+- Epic / Story / task note の名前は日本語を優先する
+- note 名は `E001-`, `S001-`, `T001-` の ID prefix を維持しつつ、その後ろの表示名と file 名のベース名を日本語にする
 - `型・関数IO作成` task では、可能なら `~/.config/opencode/obsidian-template/templates/task-patterns/type-function-io.md` を優先する
 - 対象の vault path、project、Epic / Story の切り方、または要求整理が曖昧な場合は、作成前に短い確認質問を 1 つだけ行う
 - current operational mode が plan または read-only の場合は、vault note の作成、更新、削除、`blocked_by` 更新を行わない
@@ -64,7 +66,7 @@ task_manager 契約の要点:
 - build mode では、作成または更新した Epic note と Story note
 - build mode では、作成した task note
 - build mode では、更新した task note
-- build mode では、削除または `- [-]` にした tasks
+- build mode では、削除または `workflow_state: cancelled` にした tasks
 - plan mode では、作成候補または更新候補の Epic / Story / task note 案
 - 作成または更新した `blocked_by` 情報
 - すぐに並列開始できる tasks

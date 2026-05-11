@@ -10,7 +10,7 @@ labels: []
 human_review_required: true
 ---
 
-- [ ] <T001 型・関数IO作成>
+T001 型・関数IO作成
 
 ## Task
 
@@ -48,6 +48,7 @@ true
 - Repository: <repo-path-or-name>
 - Branch: <branch-name | TBD>
 - Worktree: <worktree-path | TBD>
+- Merge target: <target-branch-name | TBD>
 
 ## Scope rules
 
@@ -71,12 +72,19 @@ true
 
 ## Results
 
-- <作業後に追記。未実行なら空でもよい>
+- <作業結果の正本。完了時または finalize 時に更新する>
+- Summary:
+  - <何を達成したか>
+- Changes:
+  - <実装 / 設計 / 更新した内容>
+- Evidence:
+  - <review 結果、根拠、確認メモ>
 - Commits:
   - <abc1234 short message>
-- Verification: <not run | passed | failed>
-- Notes:
-  - <補足>
+- Verification:
+  - <実行した確認内容と結果>
+- Follow-ups:
+  - <残課題や次アクション>
 
 ## Notes
 

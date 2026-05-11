@@ -20,14 +20,34 @@
       "template": "{file:./commands/task-breakdown.md}"
     },
     "start-task-note": {
-      "description": "Start one executable task note via task_manager",
+      "description": "Start one or more executable task notes via task_manager",
       "agent": "build",
       "template": "{file:./commands/start-task-note.md}"
     },
     "close-task-note": {
-      "description": "Manually close one task note after human review completion",
+      "description": "Manually close one or more task notes after human review completion",
       "agent": "build",
       "template": "{file:./commands/close-task-note.md}"
+    },
+    "close-story-note": {
+      "description": "Manually close one or more story notes after goal verification",
+      "agent": "build",
+      "template": "{file:./commands/close-story-note.md}"
+    },
+    "close-epic-note": {
+      "description": "Manually close one or more epic notes after goal verification",
+      "agent": "build",
+      "template": "{file:./commands/close-epic-note.md}"
+    },
+    "git-finalize": {
+      "description": "Finalize git work for one or more task, story, or epic notes",
+      "agent": "build",
+      "template": "{file:./commands/git-finalize.md}"
+    },
+    "review-feedback": {
+      "description": "Record human review feedback on one or more task notes",
+      "agent": "build",
+      "template": "{file:./commands/review-feedback.md}"
     }
   },
   "agent": {
